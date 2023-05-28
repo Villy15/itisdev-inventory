@@ -1,0 +1,53 @@
+* {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+}
+
+html,
+body {
+    max-width: 100vw;
+    overflow-x: hidden;
+}
+
+main {
+    display: flex;
+    height: 100vh;
+}
+
+
+.sidebar {
+    width: 17rem;
+    height: 100%;
+    background-color: antiquewhite;
+    padding: 1rem;
+
+    .top {
+        width: max-content;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding-bottom: 1rem;
+        margin-bottom: 1rem;
+        border-bottom: 1px solid black;
+    }
+    
+    // Sidebar List
+    ul {
+        list-style: none;
+        // Sidebar List Items
+        .link {
+            text-decoration: none;
+            color: black;
+            padding: 1rem;
+            display: flex;
+            background-color: white;
+            margin-bottom: 1rem;
+            border-radius: 0.8rem;
+
+            span {
+                margin-left: 1rem;
+            }
+        }
+    }
+}
