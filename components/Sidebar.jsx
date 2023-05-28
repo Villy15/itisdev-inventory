@@ -53,21 +53,6 @@ const Sidebar = () => {
         </ul>
       </aside>
     </div>
-
-    // <div className='sidebar'>
-    //     <div className='header'>
-    //         <MdOutlineInventory2 />
-    //         <h1>Inventory</h1>
-    //     </div>
-    //     <ul>
-    //         <li>Inventory</li>
-    //         <li>Add New Food</li>
-    //         <li>Add New Ingredient</li>
-    //         <li>Reports</li>
-    //         <li>Employees</li>
-    //         <li>POS Menu</li>
-    //     </ul>
-    // </div>
   )
 }
 

@@ -1,3 +1,6 @@
+/* 
+    GLOBALS 
+*/ 
 * {
     box-sizing: border-box;
     padding: 0;
@@ -15,15 +18,16 @@ main {
     height: 100vh;
 }
 
-
+/* 
+    SIDEBAR 
+*/ 
 .sidebar {
     width: 17rem;
     height: 100%;
-    background-color: antiquewhite;
+    background-color: lightgreen;
     padding: 1rem;
 
     .top {
-        width: max-content;
         display: flex;
         align-items: center;
         gap: 1rem;
