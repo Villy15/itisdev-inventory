@@ -16,4 +16,6 @@ async function getIngredients() {
     }
   }
 
-export default getIngredients;
+export {
+    getIngredients
+};

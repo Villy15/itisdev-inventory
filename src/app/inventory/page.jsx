@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import getIngredients from "../api/inventory/getIngredients";
+import { getIngredients } from "../api/inventory/getIngredients";
 
 export default function Inventory() {
     // https://www.youtube.com/watch?v=EaxC_kOG03E
