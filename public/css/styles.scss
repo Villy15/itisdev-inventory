@@ -1,6 +1,6 @@
 /* 
     GLOBALS 
-*/ 
+*/
 * {
     box-sizing: border-box;
     padding: 0;
@@ -20,7 +20,7 @@ main {
 
 /* 
     SIDEBAR 
-*/ 
+*/
 .sidebar {
     width: 17rem;
     height: 100%;
@@ -35,10 +35,11 @@ main {
         margin-bottom: 1rem;
         border-bottom: 1px solid black;
     }
-    
+
     // Sidebar List
     ul {
         list-style: none;
+
         // Sidebar List Items
         .link {
             text-decoration: none;
@@ -52,6 +53,33 @@ main {
             span {
                 margin-left: 1rem;
             }
+        }
+    }
+}
+
+.inventory {
+    padding: 2rem;
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+
+        th,
+        td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+            text-transform: capitalize;
+        }
+
+        th {
+            background-color: lightgreen;
+            font-weight: bold;
+        }
+
+        tbody tr:hover {
+            background-color: #f9f9f9;
         }
     }
 }
