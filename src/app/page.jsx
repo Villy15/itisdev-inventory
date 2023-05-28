@@ -42,17 +42,17 @@ export default function Home() {
 
   return (
     <div className="inventory">
-            <h1>Inventory</h1>
-            <table>
-                <thead>
-                    <tr>
-                        {getTableHeaders()}
-                    </tr>
-                </thead>
-                <tbody>
-                    {getTableData()}
-                </tbody>
-            </table>
-        </div>
+      <h1>Inventory</h1>
+      <table>
+        <thead>
+          <tr>
+            {getTableHeaders()}
+          </tr>
+        </thead>
+        <tbody>
+          {getTableData()}
+        </tbody>
+      </table>
+    </div>
   )
 }
