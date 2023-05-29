@@ -29,7 +29,13 @@ const sidebar_items = [
     name: 'POS Menu',
     icon: <RxDashboard />,
     href: '/'
-  }  
+  },  
+  {
+    name: 'Login',
+    icon: <RxDashboard />,
+    href: '/login'
+  }   
+  
 ];
 
 

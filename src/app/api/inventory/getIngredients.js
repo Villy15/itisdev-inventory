@@ -13,7 +13,6 @@ async function getIngredients() {
         if (error) {
             throw error;
         }
-        console.log(ingredients);
         return ingredients;
     } catch (error) {
       console.error(error);

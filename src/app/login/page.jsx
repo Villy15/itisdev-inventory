@@ -5,6 +5,7 @@ import { useState } from 'react';
 export default function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [isInvalid, setIsInvalid] = useState(false);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -13,10 +14,8 @@ export default function Login() {
       password: password
     };
 
-    console.log(user);
-
     try {
-      const response = await fetch('/api/login.js', {
+      const response = await fetch('/api/login', {
         method: 'POST',
         body: JSON.stringify(user),
         headers: {
@@ -30,10 +29,22 @@ export default function Login() {
 
       const data = await response.json();
       console.log(data);
+
+      if (data === 'User Invalid') {
+        setIsInvalid(true);
+      } else {
+        setIsInvalid(false);
+      }
     } catch (err) {
       console.error(err);
     }
   };
+
+  function showInvalid() {
+    if (isInvalid) {
+      return <p>Invalid username or password</p>;
+    }
+  }
 
   return (
     <div>
@@ -55,6 +66,7 @@ export default function Login() {
         <br />
         <button type="submit">Submit</button>
       </form>
+      {showInvalid()}
     </div>
   );
 }
