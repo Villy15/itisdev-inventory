@@ -1,13 +1,14 @@
-"use client"
+import Header from "../../components/Header"
+import Sidebar from "../../components/Sidebar"
 
-import { useEffect, useState } from "react"
+import { useState, useEffect } from "react";
 import { getIngredients } from "./api/inventory/getIngredients";
 
 export default function Home() {
-  const [ingredients, setIngredients] = useState([])
+  const [ingredients, setIngredients] = useState([]);
 
   useEffect(() => {
-    fetchIngredients();
+    // fetchIngredients();
   }, []);
 
   async function fetchIngredients() {
@@ -41,18 +42,27 @@ export default function Home() {
   }
 
   return (
-    <div className="inventory">
-      <h1>Inventory</h1>
-      <table>
-        <thead>
-          <tr>
-            {getTableHeaders()}
-          </tr>
-        </thead>
-        <tbody>
-          {getTableData()}
-        </tbody>
-      </table>
-    </div>
+    <>
+      <main>
+        <Sidebar />
+        <div className="main-section">
+          <Header />
+          <div className="inventory">
+            <h1>Dashboard</h1>
+            <table>
+              <thead>
+                <tr>
+                  {getTableHeaders()}
+                </tr>
+              </thead>
+              <tbody>
+                {getTableData()}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </main>
+    </>
   )
 }
