@@ -8,7 +8,8 @@ export default function Home() {
   const [ingredients, setIngredients] = useState([]);
 
   useEffect(() => {
-    // fetchIngredients();
+    fetchIngredients();
+    
   }, []);
 
   async function fetchIngredients() {
