@@ -3,12 +3,34 @@ import Sidebar from "../../components/Sidebar"
 
 import { useState, useEffect } from "react";
 import { getIngredients } from "./api/inventory/getIngredients";
+import { withSessionSsr } from "../../lib/withSession";
 
-export default function Home() {
+
+export const getServerSideProps = withSessionSsr(
+  async function getServerSideProps({ req, res }) {
+    let user = req.session.user;
+
+    console.log(user);
+
+    if (!user) {
+      user = {
+        role: "Guest",
+      }
+    }
+
+    return {
+      props: {
+        user,
+      },
+    };
+  }
+);
+
+export default function Home({user}) {
   const [ingredients, setIngredients] = useState([]);
 
   useEffect(() => {
-    fetchIngredients();
+    // fetchIngredients();
     
   }, []);
 
@@ -47,9 +69,8 @@ export default function Home() {
       <main>
         <Sidebar />
         <div className="main-section">
-          <Header />
+          <Header page={"Dashboard"} user={user}/>
           <div className="inventory">
-            <h1>Dashboard</h1>
             <table>
               <thead>
                 <tr>

@@ -3,14 +3,37 @@
 import Header from "../../../components/Header"
 import Sidebar from "../../../components/Sidebar"
 
-export default function Inventory() {
+import { withSessionSsr } from "../../../lib/withSession";
+
+export const getServerSideProps = withSessionSsr(
+  async function getServerSideProps({ req, res }) {
+    let user = req.session.user;
+
+    console.log(user);
+
+    if (!user) {
+      user = {
+        role: "Guest",
+      }
+    }
+
+    return {
+      props: {
+        user,
+      },
+    };
+  }
+);
+
+const Inventory = ({
+  user
+}) => {
   return (
     <main>
       <Sidebar />
       <div className="main-section">
-        <Header />
+        <Header page={"Inventory"} user={user}/>
         <div className="inventory">
-          <h1>Inventory</h1>
           <table>
             <thead>
               <tr>
@@ -27,3 +50,5 @@ export default function Inventory() {
     </main>
   )
 }
+
+export default Inventory;

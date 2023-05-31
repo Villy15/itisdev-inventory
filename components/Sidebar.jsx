@@ -34,8 +34,7 @@ const sidebar_items = [
     name: 'Login',
     icon: <RxDashboard />,
     href: '/login'
-  }   
-  
+  },
 ];
 
 

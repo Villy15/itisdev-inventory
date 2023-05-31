@@ -3,11 +3,35 @@
 import { useState } from 'react';
 import Header from '../../../components/Header';
 import Sidebar from '../../../components/Sidebar';
+import { useRouter } from 'next/router';
 
-export default function Login() {
+import { withSessionSsr } from "../../../lib/withSession";
+
+export const getServerSideProps = withSessionSsr(
+  async function getServerSideProps({ req, res }) {
+    let user = req.session.user;
+
+    console.log(user);
+
+    if (!user) {
+      user = {
+        role: "Guest",
+      }
+    }
+
+    return {
+      props: {
+        user,
+      },
+    };
+  }
+);
+
+export default function Login({user}) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [isInvalid, setIsInvalid] = useState(false);
+  const router = useRouter();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -17,22 +41,24 @@ export default function Login() {
     };
 
     try {
-      // const response = await fetch('/api/login', {
-      //   method: 'POST',
-      //   body: JSON.stringify(user),
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //   },
-      // });
+      const response = await fetch('/api/login', {
+        method: 'POST',
+        body: JSON.stringify(user),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
 
-      // if (!response.ok) {
-      //   setIsInvalid(true);
-      //   throw new Error('Request failed with status ' + response.status);
-      // }
+      if (!response.ok) {
+        setIsInvalid(true);
+        throw new Error('Request failed with status ' + response.status);
+      }
 
-      // const data = await response.json();
-      // console.log(data);
+      const data = await response.json();
+      console.log(data);
       setIsInvalid(false);
+       
+      router.push('/');
 
     } catch (err) {
       console.error(err);
@@ -49,9 +75,8 @@ export default function Login() {
     <main>
       <Sidebar />
       <div className="main-section">
-        <Header />
+        <Header page={"Login"} user={user}/>
         <div>
-          <h1>Login</h1>
           <form onSubmit={handleSubmit}>
             <label>Username:</label>
             <input
