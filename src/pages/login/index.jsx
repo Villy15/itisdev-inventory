@@ -70,7 +70,6 @@ export default function Login({user}) {
 
   return (
     <main>
-      <Sidebar />
       <div className="main-section">
         <Header page={"Login"} user={user}/>
         <div>

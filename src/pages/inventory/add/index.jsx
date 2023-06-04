@@ -27,7 +27,7 @@ const AddInventory = ({
 }) => {
     return (
         <main>
-            <Sidebar />
+            <Sidebar role={user.role}/>
             <div className="main-section">
                 <Header page={"Inventory"} user={user} />
                 <AddInventoryForm />

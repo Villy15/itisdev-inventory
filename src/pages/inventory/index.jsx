@@ -21,7 +21,7 @@ export const getServerSideProps = withSessionSsr(
     return {
       props: {
         user,
-      },
+      }, 
     };
   }
 );
@@ -32,7 +32,7 @@ const Inventory = ({
   const [ingredients, setIngredients] = useState([]);
 
   useEffect(() => {
-    fetchIngredients();
+    // fetchIngredients();
   }, []);
   
   async function fetchIngredients() {
@@ -57,7 +57,7 @@ const Inventory = ({
   
   return (
     <main>
-      <Sidebar />
+      <Sidebar role={user.role}/>
       <div className="main-section">
         <Header page={"Inventory"} user={user} />
         <div className="inventory">
