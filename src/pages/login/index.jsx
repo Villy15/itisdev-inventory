@@ -1,17 +1,15 @@
 "use client"
+import Header from '@components/Header';
+import Sidebar from '@components/Sidebar';
 
 import { useState } from 'react';
-import Header from '../../../components/Header';
-import Sidebar from '../../../components/Sidebar';
 import { useRouter } from 'next/router';
 
-import { withSessionSsr } from "../../../lib/withSession";
+import { withSessionSsr } from '@lib/withSession';
 
 export const getServerSideProps = withSessionSsr(
   async function getServerSideProps({ req, res }) {
     let user = req.session.user;
-
-    console.log(user);
 
     if (!user) {
       user = {
@@ -55,7 +53,6 @@ export default function Login({user}) {
       }
 
       const data = await response.json();
-      console.log(data);
       setIsInvalid(false);
        
       router.push('/');

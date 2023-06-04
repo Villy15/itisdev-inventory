@@ -1,24 +1,21 @@
-import supabase from "../../../../supabase";
+import { withSessionRoute } from "@lib/withSession";
+import supabase from "@supabase";
 
-async function getIngredients() {
+export default withSessionRoute(getIngredients);
+
+async function getIngredients(req, res) {
     try {
-        // select all from the ingredients table
-        // SELECT *
-        // FROM ingredients
         let { data: ingredients, error } = await supabase
             .from('ingredients')
             .select('*');
-            
 
         if (error) {
             throw error;
         }
-        return ingredients;
-    } catch (error) {
-      console.error(error);
-    }
-  }
 
-export {
-    getIngredients
-};
+        res.send(ingredients);
+    } catch (error) {
+        res.statusCode = 500;
+        res.send({ error: "Server error" });
+    }
+}

@@ -11,6 +11,7 @@ async function loginRoute(req, res) {
     .select("*")
     .eq("username", username);
 
+  console.log(users);
   const user = users[0];
 
   if (error) {

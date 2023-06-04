@@ -1,7 +1,11 @@
 {
   "compilerOptions": {
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/pages/*"],
+      "@components/*": ["./components/*"],
+      "@api/*": ["./src/pages/api/*"],
+      "@lib/*": ["./lib/*"],
+      "@supabase": ["./supabase"]
     }
   }
 }
