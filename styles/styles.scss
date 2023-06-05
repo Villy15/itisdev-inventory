@@ -22,13 +22,67 @@ main {
     width: 100%;
 }
 
+.login-section {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+
+    .container {
+        width: 25rem;
+        height: 25rem;
+        background-color: #697D69;
+    }
+
+    h1 {
+        text-align: center;
+        padding: 1rem;
+        margin-top: 2rem;
+        color: white;
+    }
+
+    form {
+        display: flex;
+        flex-direction: column;
+        padding: 2rem;
+
+        input {
+            padding: 0.5rem;
+            margin-bottom: 1rem;
+            border: 1px solid #ccc;
+            font-size: 1rem;
+            background-color: #C9C9C9;
+        }
+        
+        button {
+            padding: 0.5rem 1rem;
+            margin-top: 1rem;
+            width: 50%;
+            align-self: center;
+            border-radius: 4px;
+            border: none;
+            background-color: #232E23;
+            color: #fff;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+
+        .error {
+            color: rgb(248, 147, 134);
+            align-self: center;
+            margin-top: 2rem;
+            font-size: 1.3rem;
+        }
+    }
+}
 /* 
     HEADER COMPONENT 
 */
 .header {
     width: 100%;
     height: 5rem;
-    background-color: rgba(118, 222, 69, 0.655);
+    background-color: #A7CAA7;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -54,7 +108,7 @@ main {
 .sidebar {
     width: 17rem;
     height: 100%;
-    background-color: lightgreen;
+    background-color: #697D69;
     padding: 1rem;
 
     .top {

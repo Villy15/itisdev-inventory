@@ -64,36 +64,37 @@ export default function Login({user}) {
 
   function showInvalid() {
     if (isInvalid) {
-      return <p>Invalid username or password</p>;
+      return <div className='error'>Invalid username or password</div>;
     }
   }
 
   return (
     <main>
       <div className="main-section">
-        <Header page={"Login"} user={user}/>
-        <div>
-          <form onSubmit={handleSubmit}>
-            <label>Username:</label>
-            <input
-              type="text"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-            />
-            <br />
-            <label>Password:</label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-            <br />
-            <button type="submit">Submit</button>
-          </form>
-          {showInvalid()}
+        <div className='login-section'>
+          <div className="container">
+            <h1>Login</h1>
+            <form onSubmit={handleSubmit}>
+              <input
+                type="text"w
+                value={username}
+                placeholder='Username'
+                onChange={(e) => setUsername(e.target.value)}
+              />
+              <br />
+              <input
+                type="password"
+                value={password}
+                placeholder='Password'
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              <br />
+              <button type="submit">Enter</button>
+              {showInvalid()}
+            </form>
+          </div>
         </div>
       </div>
-
     </main>
 
 
