@@ -28,6 +28,33 @@ button {
     cursor: pointer;
 }
 
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    table-layout: fixed; // Stretches to the available screen space
+
+    th,
+    td {
+        padding: 10px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+        text-transform: capitalize;
+        text-align: center;
+    }
+
+    th {
+        background-color: #A7CAA7;
+        font-weight: bold;
+        text-align: center;
+    }
+
+    tbody tr:hover {
+        background-color: #f9f9f9;
+
+    }
+}
+
 .main-section {
     width: 100%;
 }
@@ -172,34 +199,15 @@ button {
 */
 .inventory {
     padding: 2rem;
-
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-bottom: 20px;
-        table-layout: fixed; // Stretches to the available screen space
-
-        th,
-        td {
-            padding: 10px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-            text-transform: capitalize;
-            text-align: center;
-        }
-
-        th {
-            background-color: #A7CAA7;
-            font-weight: bold;
-            text-align: center;
-        }
-
-        tbody tr:hover {
-            background-color: #f9f9f9;
-
-        }
-    }
 }
+
+/* 
+    USERS PAGE
+*/
+.users {
+    padding: 2rem;
+}
+
 
 .add-inventory-form {
     display: flex;

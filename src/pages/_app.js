@@ -1,6 +1,12 @@
 import '../../styles/styles.scss'
 import Head from 'next/head'
 
+import { Lato } from 'next/font/google';
+ 
+const lato = Lato({ 
+  weight: ['100', '300', '400', '700', '900'],
+  subsets: ['latin'] 
+});
 
 export default function App({ Component, pageProps }) {
   return (
@@ -11,6 +17,11 @@ export default function App({ Component, pageProps }) {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
+      <style jsx global>{`
+        html {
+          font-family: ${lato.style.fontFamily};
+        }
+      `}</style>
       <Component {...pageProps} />
     </>
 

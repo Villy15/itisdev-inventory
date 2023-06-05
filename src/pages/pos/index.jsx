@@ -28,8 +28,6 @@ export default function POS({ user }) {
   useEffect(() => {
     if (user.role === "Guest") {
       router.push("/login");
-    } else if (user.role === "Cashier") {
-      router.push("/pos");
     }
   }, [user, router]);
 

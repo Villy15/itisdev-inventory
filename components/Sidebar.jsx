@@ -16,6 +16,11 @@ const manager_sidebar_items = [
     href: '/inventory'
   },
   {
+    name: 'Users',
+    icon: <RxDashboard />,
+    href: '/users'
+  },
+  {
     name: 'Reports',
     icon: <RxDashboard />,
     href: '/reports'

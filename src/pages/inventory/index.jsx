@@ -61,7 +61,7 @@ const Inventory = ({
       <div className="main-section">
         <Header page={"Inventory"} user={user} />
         <div className="inventory">
-          <Table ingredients={ingredients} />
+          <Table data={ingredients} />
           <Link href="/inventory/add">
            <button>Add</button>
           </Link>
