@@ -18,7 +18,7 @@ const manager_sidebar_items = [
   {
     name: 'Reports',
     icon: <RxDashboard />,
-    href: '/'
+    href: '/reports'
   },
 ];
 
@@ -36,15 +36,20 @@ const stock_controller_sidebar_items = [
   {
     name: 'Reports',
     icon: <RxDashboard />,
-    href: '/'
+    href: '/reports'
   },
 ];
 
-const chef_sidebar_items = [
+const cashier_sidebar_items = [
   {
     name: 'POS Menu',
     icon: <RxDashboard />,
-    href: '/'
+    href: '/pos'
+  },  
+  {
+    name: 'Transactions',
+    icon: <RxDashboard />,
+    href: '/transactions'
   },  
 ];
 
@@ -60,8 +65,8 @@ const Sidebar = ({role}) => {
       case "Stock Controller":
         setSidebarItems(stock_controller_sidebar_items);
         break;
-      case "Chef":
-        setSidebarItems(chef_sidebar_items);
+      case "Cashier":
+        setSidebarItems(cashier_sidebar_items);
         break;
       default:
         setSidebarItems([
@@ -80,7 +85,7 @@ const Sidebar = ({role}) => {
       <aside className='sidebar'>
         <div className='top'>
           <MdOutlineInventory2  className='icon'/> 
-          <h1>{role}</h1>
+          <h1>Restaurant Name</h1>
         </div>
         <ul>
           {sidebarItems.map((item, index) => (

@@ -68,20 +68,24 @@ const AddInventoryForm = () => {
                         name="name"
                         id="name"
                         value={formValues.name}
-                        placeholder="Name"
                         onChange={handleInputChange}
                     />
                 </div>
                 <div className="form-group">
                     <label htmlFor="category">Category</label>
-                    <input
+                    <select
                         type="text"
                         name="category"
                         id="category"
                         value={formValues.category}
-                        placeholder="Category"
                         onChange={handleInputChange}
-                    />
+                    >
+                        <option value="" hidden>Select Category</option>
+                        <option value="meat">Meat</option>
+                        <option value="drinks">Drinks</option>
+                        <option value="baking">Baking</option>
+                        <option value="test">Dairy</option>
+                    </select>
                 </div>
                 <div className="form-group">
                     <label htmlFor="quantity">Quantity</label>
@@ -90,20 +94,24 @@ const AddInventoryForm = () => {
                         name="quantity"
                         id="quantity"
                         value={formValues.quantity}
-                        placeholder="Quantity"
                         onChange={handleInputChange}
                     />
                 </div>
                 <div className="form-group">
                     <label htmlFor="unit">Unit</label>
-                    <input
-                        type="text"
+                    <select
+                        type="number"
                         name="unit"
                         id="unit"
                         value={formValues.unit}
-                        placeholder="Unit"
                         onChange={handleInputChange}
-                    />
+                    >
+                        <option value="" hidden>Select Unit</option>
+                        <option value="grams">Grams</option>
+                        <option value="pieces">Pieces</option>
+                        <option value="mililiters">Mililiters</option>
+                        <option value="liters">Liters</option>
+                    </select>
                 </div>
                 <button type="submit">Add</button>
             </form>

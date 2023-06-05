@@ -32,7 +32,7 @@ const Inventory = ({
   const [ingredients, setIngredients] = useState([]);
 
   useEffect(() => {
-    // fetchIngredients();
+    fetchIngredients();
   }, []);
   
   async function fetchIngredients() {

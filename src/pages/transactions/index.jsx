@@ -22,24 +22,21 @@ export const getServerSideProps = withSessionSsr(
   }
 );
 
-export default function Home({ user }) {
+export default function Transactions({ user }) {
   const router = useRouter();
 
   useEffect(() => {
     if (user.role === "Guest") {
       router.push("/login");
-    } else if (user.role === "Cashier") {
-      router.push("/pos");
     }
   }, [user, router]);
-
 
   return (
     <>
       <main>
         <Sidebar role={user.role}/>
         <div className="main-section">
-          <Header page={"Dashboard"} user={user} />
+          <Header page={"Transactions"} user={user} />
         </div>
       </main>
     </>

@@ -25,10 +25,6 @@ const Header = ({user, page}) => {
                 <RxAvatar className='icon'/>
                 <span>{user.role}</span>
             </div>
-            {/* if user.role == Guest, dont show logout */}
-            {/* if user.role == Admin, show logout */ }
-
-
             {
               user.role !== "Guest" && <button onClick={logout}>Logout</button>
             }

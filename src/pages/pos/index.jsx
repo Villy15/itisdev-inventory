@@ -22,7 +22,7 @@ export const getServerSideProps = withSessionSsr(
   }
 );
 
-export default function Home({ user }) {
+export default function POS({ user }) {
   const router = useRouter();
 
   useEffect(() => {
@@ -39,7 +39,7 @@ export default function Home({ user }) {
       <main>
         <Sidebar role={user.role}/>
         <div className="main-section">
-          <Header page={"Dashboard"} user={user} />
+          <Header page={"POS"} user={user} />
         </div>
       </main>
     </>
