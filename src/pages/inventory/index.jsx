@@ -61,10 +61,17 @@ const Inventory = ({
       <div className="main-section">
         <Header page={"Inventory"} user={user} />
         <div className="inventory">
-          <Table data={ingredients} />
-          <Link href="/inventory/add">
-           <button>Add</button>
+          <Link href="/inventory/add" >
+            <button className="margin-b">Add</button>
           </Link>
+          <Link href="/inventory/expired" className="margin-b">
+            <button className="margin-b">Input Expired</button>
+          </Link>
+          <Link href="/inventory/physicalcount" className="margin-b">
+            <button className="margin-b">Input Physical Count</button>
+          </Link>
+          <Table data={ingredients} />
+
         </div>
       </div>
 
