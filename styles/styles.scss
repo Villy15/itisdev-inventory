@@ -64,6 +64,20 @@ table {
     width: 100%;
 }
 
+.dashboard {
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
+    .lowcount {
+        width: 50%;
+        display : flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+}
+
 .login-section {
     display: flex;
     flex-direction: column;
@@ -275,4 +289,14 @@ table {
     .description {
         height: 4rem;
     }
+}
+
+// This is a search input, just style this
+.search {
+    padding: 0.5rem;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+    width: 40%;
+    margin-bottom: 1rem;
 }
