@@ -11,17 +11,17 @@ const manager_sidebar_items = [
     href: '/'
   },
   {
-    name: 'Inventory',
+    name: 'View Inventory',
     icon: <RxDashboard />,
     href: '/inventory'
   },
   {
-    name: 'Users',
+    name: 'View Users',
     icon: <RxDashboard />,
     href: '/users'
   },
   {
-    name: 'Reports',
+    name: 'View Reports',
     icon: <RxDashboard />,
     href: '/reports'
   },
@@ -34,12 +34,12 @@ const stock_controller_sidebar_items = [
     href: '/'
   },
   {
-    name: 'Inventory',
+    name: 'View Inventory',
     icon: <RxDashboard />,
     href: '/inventory'
   },
   {
-    name: 'Reports',
+    name: 'View Reports',
     icon: <RxDashboard />,
     href: '/reports'
   },
