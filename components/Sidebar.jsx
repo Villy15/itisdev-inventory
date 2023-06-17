@@ -90,7 +90,7 @@ const Sidebar = ({role}) => {
       <aside className='sidebar'>
         <div className='top'>
           <MdOutlineInventory2  className='icon'/> 
-          <h1>Restaurant Name</h1>
+          <h1>Restaurant</h1>
         </div>
         <ul>
           {sidebarItems.map((item, index) => (

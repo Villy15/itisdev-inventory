@@ -20,7 +20,7 @@ const Header = ({user, page}) => {
     <div className='header'>
         <h1>{page}</h1>
         <div className="right-side">
-            <IoNotificationsOutline className='icon'/>
+            {/* <IoNotificationsOutline className='icon'/> */}
             <div className="user">
                 <RxAvatar className='icon'/>
                 <span>{user.role}</span>
