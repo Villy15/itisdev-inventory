@@ -1,11 +1,18 @@
 import '../../styles/styles.scss'
 import Head from 'next/head'
 
-import { Lato } from 'next/font/google';
+import { Noto_Sans } from 'next/font/google';
+import { Poppins } from 'next/font/google';
+
  
-const lato = Lato({ 
+const noto_sans = Noto_Sans({ 
   weight: ['100', '300', '400', '700', '900'],
   subsets: ['latin'] 
+});
+
+const poppins = Poppins({ 
+  weight: ['100', '300', '400', '700', '900'],
+  subsets: ['latin']
 });
 
 export default function App({ Component, pageProps }) {
@@ -19,7 +26,11 @@ export default function App({ Component, pageProps }) {
       </Head>
       <style jsx global>{`
         html {
-          font-family: ${lato.style.fontFamily};
+          font-family: ${noto_sans.style.fontFamily};
+        }
+
+        .header {
+          font-family: ${poppins.style.fontFamily};
         }
       `}</style>
       <Component {...pageProps} />

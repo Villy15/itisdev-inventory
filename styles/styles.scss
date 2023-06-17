@@ -1,4 +1,11 @@
-/* 
+// Add variable colors
+$darkblue:    #22577A;
+$lightblue:   #38A3A5;
+$darkgreen:   #57CC99;
+$lightgreen:  #80ED99;
+$lightergreen:#C7F9CC;
+
+/*
     GLOBALS 
 */
 * {
@@ -23,14 +30,14 @@ button {
     margin-right: 1rem;
     border-radius: 4px;
     border: none;
-    background-color: #697D69;
+    background-color: $darkblue;
     color: #fff;
     font-size: 1rem;
     cursor: pointer;
 
     // hover
     &:hover {
-        background-color: #A7CAA7;
+        background-color: $lightblue;
     }
 }
 
@@ -50,7 +57,7 @@ table {
     }
 
     th {
-        background-color: #A7CAA7;
+        background-color: $darkgreen;
         font-weight: bold;
         text-align: center;
     }
@@ -138,11 +145,16 @@ table {
 .header {
     width: 100%;
     height: 5rem;
-    background-color: #A7CAA7;
+    background-color: $darkgreen;
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 0 2rem;
+    color: white;
+
+    h1 {
+        font-weight: 300;
+    }
 
     .right-side {
         display: flex;
@@ -154,14 +166,14 @@ table {
             padding: 0.5rem 1rem;
             border-radius: 4px;
             border: none;
-            background-color: #697D69;
+            background-color: $darkblue;
             color: #fff;
             font-size: 1rem;
             cursor: pointer;
 
             // hover
             &:hover {
-                background-color: #6e9b6e;
+                background-color: $lightblue;
             }
         }
     }
@@ -173,7 +185,7 @@ table {
         cursor: pointer;
 
         span {
-            font-weight: bold;
+            font-weight: 300;
             font-size: larger;
         }
     }
@@ -185,7 +197,7 @@ table {
 .sidebar {
     width: 17rem;
     height: 100%;
-    background-color: #697D69;
+    background-color: $darkblue;
     padding: 1rem;
 
     .top {
@@ -195,6 +207,11 @@ table {
         padding-bottom: 1rem;
         margin-bottom: 1rem;
         border-bottom: 1px solid black;
+        
+        h1 {
+            font-weight: 600;
+            color: white;
+        }
     }
 
     // Sidebar List
@@ -217,7 +234,7 @@ table {
         }
         // hover
         .link:hover {
-            background-color: #A7CAA7;
+            background-color: $lightblue;
             color: white;
         }
     }
