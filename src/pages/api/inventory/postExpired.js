@@ -1,17 +1,18 @@
 import { withSessionRoute } from "@lib/withSession";
 import supabase from "@supabase";
 
-export default withSessionRoute(postExpired);
+export default withSessionRoute(postExpiredInventory);
 
-async function postExpired(req, res) {
+async function postExpiredInventory(req, res) {
     try {
-        const expiredIngredient = await req.body;
-        console.log(expiredIngredient);
+        console.log("postExpiredInventory");
+        const newSpoiled_Inventory = await req.body;
+        console.log(newSpoiled_Inventory);
 
         const { data, error } = await supabase
-            .from("expired")
-            .insert(expiredIngredient)
-    
+            .from("spoiled_inventory")
+            .insert(newSpoiled_Inventory);
+        
         if (error) {
             throw error;
         }

@@ -1,7 +1,7 @@
 import Link from 'next/link'
 
 import { MdOutlineInventory2 } from 'react-icons/md'
-import { RxDashboard } from 'react-icons/rx'
+import { RxDashboard, RxArrowRight } from 'react-icons/rx'
 import { useState, useEffect } from 'react';
 
 const manager_sidebar_items = [
@@ -36,7 +36,29 @@ const stock_controller_sidebar_items = [
   {
     name: 'View Inventory',
     icon: <RxDashboard />,
-    href: '/inventory'
+    href: '/inventory',
+    functions: [
+      {
+        name: 'Add New Inventory',
+        icon: <RxArrowRight />,
+        href: '/inventory/addinventory'
+      },
+      {
+        name: 'Replenish Stock',
+        icon: <RxArrowRight />,
+        href: '/inventory/replenishstock',
+      },
+      {
+        name: 'Input Expired',
+        icon: <RxArrowRight />,
+        href: '/inventory/expired',
+      },
+      {
+        name: 'Input Physical Count',
+        icon: <RxArrowRight />,
+        href: '/inventory/physicalcount',
+      },
+    ]
   },
   {
     name: 'View Reports',
@@ -94,12 +116,26 @@ const Sidebar = ({role}) => {
         </div>
         <ul>
           {sidebarItems.map((item, index) => (
-              <li key={index}>
-                <Link href={item.href} className='link'>
+            <li key={index}>
+              <div className="link-container">
+                <Link href={item.href} className="link">
                   {item.icon}
                   <span>{item.name}</span>
                 </Link>
-              </li>
+                {item.functions && (
+                  <ul className="functions-dropdown">
+                    {item.functions.map((func, index) => (
+                      <li key={index}>
+                        <Link href={func.href} className="sub-link">
+                          {func.icon}
+                          <span>{func.name}</span>
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            </li>
           ))}
         </ul>
       </aside>

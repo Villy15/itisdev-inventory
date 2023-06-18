@@ -95,7 +95,7 @@ table {
     .container {
         width: 25rem;
         height: 25rem;
-        background-color: #697D69;
+        background-color: $darkblue;
     }
 
     h1 {
@@ -125,7 +125,7 @@ table {
             align-self: center;
             border-radius: 4px;
             border: none;
-            background-color: #232E23;
+            background-color: $darkgreen;
             color: #fff;
             font-size: 1rem;
             cursor: pointer;
@@ -231,12 +231,44 @@ table {
             span {
                 margin-left: 1rem;
             }
+
+            &:hover {
+                .functions-dropdown {
+                  display: block;
+                  margin: 3rem;
+                }
+              }
         }
+
+        .functions-dropdown {
+            border-radius: 0.8rem;
+        }
+        
         // hover
         .link:hover {
             background-color: $lightblue;
             color: white;
         }
+
+        .sub-link {
+            text-decoration: none;
+            color: black;
+            padding: 1rem;
+            display: flex;
+            background-color: white;
+            margin-bottom: 1rem;
+            border-radius: 0.8rem;
+            margin-left: 1.5rem;
+
+            span {
+                margin-left: 1rem;
+            }
+
+            &:hover {
+                background-color: $lightblue;
+                color: white;
+            }
+          }
     }
 }
 
@@ -246,6 +278,10 @@ table {
 .inventory {
     padding: 2rem;
 
+    .inventory-functions {
+        display: flex;
+        justify-content: space-between;
+    }
 }
 
 .margin-b {
@@ -274,6 +310,8 @@ table {
     justify-content: center;
     width: 50%;
     padding: 1rem;
+
+ 
 }
 
 .form-group {
@@ -284,6 +322,16 @@ table {
     label {
         font-weight: bold;
         margin-bottom: 0.5rem;
+
+        span {
+            color: red
+        }
+
+        span.current-quantity {
+            color: black;
+            font-weight: 100;
+            font-style: italic;
+        }
     }
 
     input[type="text"] {
@@ -314,6 +362,6 @@ table {
     border-radius: 4px;
     border: 1px solid #ccc;
     font-size: 1rem;
-    width: 40%;
+    width: 100%;
     margin-bottom: 1rem;
 }

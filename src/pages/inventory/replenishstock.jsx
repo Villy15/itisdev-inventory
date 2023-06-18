@@ -1,6 +1,6 @@
 import Header from "@components/Header";
 import Sidebar from "@components/Sidebar";
-import AddInventoryForm from "@components/Inventory/AddInventoryForm";
+import ReplenishStockForm from "@components/Inventory/ReplenishStockForm";
 
 import { withSessionSsr } from "@lib/withSession";
 
@@ -22,18 +22,18 @@ export const getServerSideProps = withSessionSsr(
     }
 );
 
-const AddInventory = ({
+const ReplenishStock = ({
     user
 }) => {
     return (
         <main>
             <Sidebar role={user.role}/>
             <div className="main-section">
-                <Header page={"Inventory"} user={user} />
-                <AddInventoryForm />
+                <Header page={"Replenish Inventory Stock"} user={user} />
+                <ReplenishStockForm user={user.id}/>                
             </div>
         </main>
     )
 }
 
-export default AddInventory;
+export default ReplenishStock;

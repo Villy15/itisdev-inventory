@@ -29,15 +29,15 @@ export const getServerSideProps = withSessionSsr(
 const Inventory = ({
   user
 }) => {
-  const [ingredients, setIngredients] = useState([]);
+  const [inventory, setInventory] = useState([]);
 
   useEffect(() => {
-    fetchIngredients();
+    getInventory();
   }, []);
   
-  async function fetchIngredients() {
+  async function getInventory() {
     try {
-      const response = await fetch('/api/inventory/getIngredients', {
+      const response = await fetch('/api/inventory/getInventory', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -49,7 +49,7 @@ const Inventory = ({
       }
 
       const data = await response.json();
-      setIngredients(data);       
+      setInventory(data);       
     } catch (err) {
       console.error(err);
     }
@@ -62,22 +62,31 @@ const Inventory = ({
         <Header page={"Inventory"} user={user} />
         <div className="inventory">
 
-          {/* Add input search*/}
-          <input 
-            type="text" 
-            placeholder="Search Name"
-            className="search"
-          />
-          <Table data={ingredients} />
-          <Link href="/inventory/add" >
-            <button className="margin-b">Add</button>
-          </Link>
-          <Link href="/inventory/expired" className="margin-b">
-            <button className="margin-b">Input Expired</button>
-          </Link>
-          <Link href="/inventory/physicalcount" className="margin-b">
-            <button className="margin-b">Input Physical Count</button>
-          </Link>
+          <div className="inventory-functions">
+            <div>
+              <input 
+                type="text" 
+                placeholder="Search Name"
+                className="search"
+              />
+            </div>
+            <div>
+              {/* <Link href="/inventory/addinventory" >
+                <button className="margin-b">Add New Inventory</button>
+              </Link>
+              <Link href="/inventory/expired" className="margin-b">
+                <button className="margin-b">Input Expired</button>
+              </Link>
+              <Link href="/inventory/physicalcount" className="margin-b">
+                <button className="margin-b">Input Physical Count</button>
+              </Link>
+              <Link href="/inventory/replenishstock" className="margin-b">
+                <button className="margin-b">Replenish Stock</button>
+              </Link> */}
+            </div>
+          </div>
+          <Table data={inventory} />
+          
         </div>
       </div>
 

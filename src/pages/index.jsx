@@ -25,7 +25,7 @@ export const getServerSideProps = withSessionSsr(
 
 export default function Home({ user }) {
   const router = useRouter();
-  const [ingredients, setIngredients] = useState([]);
+  const [inventory, setInventory] = useState([]);
 
   useEffect(() => {
     if (user.role === "Guest") {
@@ -36,12 +36,12 @@ export default function Home({ user }) {
   }, [user, router]);
 
   useEffect(() => {
-    fetchIngredients();
+    getInventory();
   }, []);
 
-  async function fetchIngredients() {
+  async function getInventory() {
     try {
-      const response = await fetch('/api/inventory/getIngredients', {
+      const response = await fetch('/api/inventory/getInventory', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -54,16 +54,15 @@ export default function Home({ user }) {
 
       const data = await response.json();
 
-      // Filter ingredients that has a lower count than the minimum quantity
       const ingredients = data
         .filter(({ quantity, minquantity }) => quantity < minquantity)
-        .map(({ name, quantity, minquantity }) => ({
-          name,
+        .map(({ ingredientName, quantity, minquantity }) => ({
+          ingredientName,
           quantity,
           minquantity,
         }));
 
-      setIngredients(ingredients);       
+      setInventory(ingredients);       
     } catch (err) {
       console.error(err);
     }
@@ -79,7 +78,7 @@ export default function Home({ user }) {
           <div className="dashboard">
             <div className="lowcount">
               <h1>Low Count Ingredients</h1>
-              <Table data={ingredients} />
+              <Table data={inventory} />
             </div>
           </div>
         </div>

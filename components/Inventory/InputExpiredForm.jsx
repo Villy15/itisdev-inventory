@@ -2,9 +2,9 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 
 const InputExpiredForm = ({user}) => {
-
     const router = useRouter();
-    const [ingredients, setIngredients] = useState([]);
+
+    const [inventory, setInventory] = useState([]);
     const [formValues, setFormValues] = useState({
         name: '',
         quantity: '',
@@ -12,7 +12,7 @@ const InputExpiredForm = ({user}) => {
     });
 
     useEffect(() => {
-        getIngredients();
+        getInventory();
     }, []);
 
     const handleInputChange = (e) => {
@@ -23,20 +23,33 @@ const InputExpiredForm = ({user}) => {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        if (!formValues.name || !formValues.quantity || !formValues.description) {
+        if (!formValues.name || !formValues.quantity) {
             alert('Please fill out all fields');
             return;
         }
 
+        if (formValues.description == '') {
+            formValues.description = 'No description';
+        }
+
         const newExpired = { 
-            ingredientID: ingredients.find((ingredient) => ingredient.name === formValues.name).id,
+            newDate: new Date().toLocaleString('en-US', { timeZone: 'Asia/Singapore' }),
+            userId: user,
+            inventoryId: inventory.find((i) => i.ingredientName === formValues.name).inventoryId,
             quantity: formValues.quantity,
-            inputdatetime: new Date().toLocaleString('en-US', { timeZone: 'Asia/Singapore' }),
-            userid: user,
+            unit: inventory.find((i) => i.ingredientName === formValues.name).unit,
             // description: formValues.description,
          };
 
+
+
+        const updateInventoryQuantity = {
+            inventoryId: inventory.find((i) => i.ingredientName === formValues.name).inventoryId,
+            quantity: parseFloat(inventory.find((i) => i.ingredientName === formValues.name).quantity) - parseFloat(formValues.quantity) ,
+        };
+
         postExpiredIngredient(newExpired);
+        patchInventory(updateInventoryQuantity);
 
         setFormValues({
             name: '',
@@ -45,9 +58,9 @@ const InputExpiredForm = ({user}) => {
         });
     };
 
-    async function getIngredients() {
+    async function getInventory() {
         try {
-            const response = await fetch('/api/inventory/getIngredients', {
+            const response = await fetch('/api/inventory/getInventory', {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -59,7 +72,7 @@ const InputExpiredForm = ({user}) => {
             }
 
             const data = await response.json();
-            setIngredients(data);
+            setInventory(data);
         } catch (err) {
             console.error(err);
         }
@@ -71,6 +84,8 @@ const InputExpiredForm = ({user}) => {
                 method: 'POST',
                 body: JSON.stringify(newExpired),
                 headers: {
+
+                    
                     'Content-Type': 'application/json',
                 }
             });
@@ -81,6 +96,26 @@ const InputExpiredForm = ({user}) => {
 
             const data = await response.json();
             console.log(data);
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    async function patchInventory(updateInventoryQuantity) {
+        try {
+            const response = await fetch('/api/inventory/patchInventory', {
+                method: 'PATCH',
+                body: JSON.stringify(updateInventoryQuantity),
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            });
+            
+            if (!response.ok) {
+                throw new Error('Request failed with status ' + response.status);
+            }
+
+            const data = await response.json();
             router.push('/inventory');
         } catch (error) {
             console.error(error);
@@ -92,7 +127,15 @@ const InputExpiredForm = ({user}) => {
         <div className='add-inventory-form'>
             <form onSubmit={handleSubmit}>
                 <div className="form-group">
-                    <label htmlFor="name"> Ingredient Name</label>
+                    <label htmlFor="name"> Ingredient Name <span>* </span>
+                        {formValues.name && (
+                            <span className="current-quantity">
+                                {/* Add a heading of Current Quantity of <Name>  */}
+                                Current Quantity: {inventory.find((i) => i.ingredientName === formValues.name)?.quantity} {inventory.find((i) => i.ingredientName === formValues.name)?.unit}
+                            </span>
+                        )}
+
+                    </label>
                     <select
                         type="text"
                         name="name"
@@ -101,13 +144,23 @@ const InputExpiredForm = ({user}) => {
                         onChange={handleInputChange}
                     >
                         <option value="" hidden>Select Ingredient</option>
-                        {ingredients.map((ingredient) => (
-                            <option key={ingredient._id} value={ingredient.name}>{ingredient.name}</option>
+                        {inventory.map((i) => (
+                            <option key={i.inventoryId} value={i.ingredientName}>
+                                {i.ingredientName}
+                            </option>
                         ))}
                     </select>
                 </div>
                 <div className="form-group">
-                    <label htmlFor="quantity">Quantity</label>
+                    <label htmlFor="quantity">Quantity <span>* </span> 
+                        {formValues.name && (
+                            <span className="current-quantity">
+                                {/* Add a heading of Current Quantity of <Name>  */}
+                                Input in {inventory.find((i) => i.ingredientName === formValues.name)?.unit}
+                            </span>
+                        )}
+
+                    </label>
                     <input
                         type="text"
                         name="quantity"
@@ -127,6 +180,10 @@ const InputExpiredForm = ({user}) => {
                         className='description'
                     />
                 </div>
+                <button type="button" 
+                    onClick={
+                        () => router.push('/inventory')
+                    }> Cancel</button>
                 <button type="submit">Save</button>
             </form>
         </div>

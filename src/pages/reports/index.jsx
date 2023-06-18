@@ -27,34 +27,12 @@ const Reports = ({
   user
 }) => {
   const [expired, setExpired] = useState([]); // [
-  const [reports, setReports] = useState([]);
+  const [increased, setIncreased] = useState([]);
 
   useEffect(() => {
     fetchExpired();
-    fetchReports();
+    fetchIncreased();
   }, []);
-
-  // fetchReports
-  async function fetchReports() {
-    try {
-      const response = await fetch('/api/reports/getReports', {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error('Request failed with status ' + response.status);
-      }
-
-      const data = await response.json();
-      setReports(data);
-    } catch (err) {
-      console.error(err);
-    }
-  }
-
 
   async function fetchExpired() {
     try {
@@ -77,7 +55,25 @@ const Reports = ({
   }
 
 
+  async function fetchIncreased() {
+    try {
+      const response = await fetch('/api/reports/getIncreased', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
 
+      if (!response.ok) {
+        throw new Error('Request failed with status ' + response.status);
+      }
+
+      const data = await response.json();
+      setIncreased(data);
+    } catch (err) {
+      console.error(err);
+    }
+  }
 
   return (
     <main>
@@ -85,10 +81,10 @@ const Reports = ({
       <div className="main-section">
         <Header page={"Reports"} user={user} />
         <div className="reports">
-          <h1>Expired</h1>
+          <h1>Expired Audit</h1>
           <Table data={expired} />
-          <h1>Audit Physical Count</h1>
-          <Table data={reports} />
+          <h1>Increase Audit</h1>
+          <Table data={increased} />
         </div>
       </div>
     </main>

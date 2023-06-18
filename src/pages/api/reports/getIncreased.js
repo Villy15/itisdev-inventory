@@ -1,12 +1,12 @@
 import { withSessionRoute } from "@lib/withSession";
 import supabase from "@supabase";
 
-export default withSessionRoute(getReports);
+export default withSessionRoute(getExpired);
 
-async function getReports(req, res) {
+async function getExpired(req, res) {
     try {
         let { data: reports, error } = await supabase
-            .from('reports')
+            .from('increase_inventory')
             .select('*');
 
         if (error) {

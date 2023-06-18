@@ -1,16 +1,16 @@
 import { withSessionRoute } from "@lib/withSession";
 import supabase from "@supabase";
 
-export default withSessionRoute(postIngredients);
+export default withSessionRoute(postIncreaseInventory);
 
-async function postIngredients(req, res) {
+async function postIncreaseInventory(req, res) {
     try {
-        const ingredient = await req.body;
-        console.log(ingredient);
+        const newIncrease_Inventory = await req.body;
+        console.log(newIncrease_Inventory);
 
         const { data, error } = await supabase
-            .from("ingredients")
-            .insert(ingredient);
+            .from("increase_inventory")
+            .insert(newIncrease_Inventory);
         
         if (error) {
             throw error;

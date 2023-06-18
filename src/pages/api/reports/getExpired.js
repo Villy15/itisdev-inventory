@@ -6,7 +6,7 @@ export default withSessionRoute(getExpired);
 async function getExpired(req, res) {
     try {
         let { data: reports, error } = await supabase
-            .from('expired')
+            .from('spoiled_inventory')
             .select('*');
 
         if (error) {

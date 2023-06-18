@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 
-const InputPhysicalForm = ({user}) => {
+const ReplenishStockForm = ({user}) => {
     const router = useRouter();
 
     const [inventory, setInventory] = useState([]);
@@ -13,7 +13,7 @@ const InputPhysicalForm = ({user}) => {
 
     useEffect(() => {
         getInventory();
-    }, []);;
+    }, []);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -32,18 +32,22 @@ const InputPhysicalForm = ({user}) => {
             formValues.description = 'No description';
         }
 
-        const newReport = { 
-            // reportid: 1,
-            ingredientname: formValues.name,    
-            // ingredientID: ingredients.find((ingredient) => ingredient.name === formValues.name).id,
-            quantity: ingredients.find((ingredient) => ingredient.name === formValues.name).quantity,
-            physicalcount: formValues.quantity,
-            datetime: new Date().toLocaleString('en-US', { timeZone: 'Asia/Singapore' }),
-            userid: user,
-            description: formValues.description,
-         };
+        const newIncrease_Inventory = { 
+            newDate: new Date().toLocaleString('en-US', { timeZone: 'Asia/Singapore' }),
+            userId: user,
+            inventoryId: inventory.find((i) => i.ingredientName === formValues.name).inventoryId,
+            quantity: formValues.quantity,
+            unit: inventory.find((i) => i.ingredientName === formValues.name).unit,
+            // description: formValues.description,
+        };
 
-        postReport(newReport);
+        const updateInventoryQuantity = {
+            inventoryId: inventory.find((i) => i.ingredientName === formValues.name).inventoryId,
+            quantity: parseFloat(formValues.quantity) + parseFloat(inventory.find((i) => i.ingredientName === formValues.name).quantity),
+        };
+
+        postIncreaseInventory(newIncrease_Inventory);
+        patchInventory(updateInventoryQuantity);
 
         setFormValues({
             name: '',
@@ -72,11 +76,11 @@ const InputPhysicalForm = ({user}) => {
         }
     }
  
-    async function postReport(newReport) {
+    async function postIncreaseInventory(newIncrease_Inventory) {
         try {
-            const response = await fetch('/api/reports/postReport', {
+            const response = await fetch('/api/inventory/postIncreaseInventory', {
                 method: 'POST',
-                body: JSON.stringify(newReport),
+                body: JSON.stringify(newIncrease_Inventory),
                 headers: {
                     'Content-Type': 'application/json',
                 }
@@ -87,13 +91,32 @@ const InputPhysicalForm = ({user}) => {
             }
 
             const data = await response.json();
-            console.log(data);
-            router.push('/reports');
         } catch (error) {
             console.error(error);
         }
     }
 
+
+    async function patchInventory(updateInventoryQuantity) {
+        try {
+            const response = await fetch('/api/inventory/patchInventory', {
+                method: 'PATCH',
+                body: JSON.stringify(updateInventoryQuantity),
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            });
+            
+            if (!response.ok) {
+                throw new Error('Request failed with status ' + response.status);
+            }
+
+            const data = await response.json();
+            router.push('/inventory');
+        } catch (error) {
+            console.error(error);
+        }
+    }
 
     return (
         <div className='add-inventory-form'>
@@ -150,18 +173,15 @@ const InputPhysicalForm = ({user}) => {
                         className='description'
                     />
                 </div>
-
-
-
                 <button type="button" 
                     onClick={
                         () => router.push('/inventory')
                     }> Cancel</button>
-                <button type="submit">Submit to Manager</button>
+                <button type="submit">Replenish</button>
                 {/* Add Cancel Button */}
             </form>
         </div>
     )
 }
 
-export default InputPhysicalForm
+export default ReplenishStockForm

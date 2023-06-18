@@ -1,12 +1,12 @@
 import { withSessionRoute } from "@lib/withSession";
 import supabase from "@supabase";
 
-export default withSessionRoute(getIngredients);
+export default withSessionRoute(getInventory);
 
-async function getIngredients(req, res) {
+async function getInventory(req, res) {
     try {
         let { data: ingredients, error } = await supabase
-            .from('ingredients')
+            .from('inventory')
             .select('*');
 
         if (error) {
