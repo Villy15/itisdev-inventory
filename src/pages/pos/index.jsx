@@ -26,6 +26,7 @@ export default function POS({ user }) {
   const router = useRouter();
 
   const [dishes, setDishes] = useState([]);
+  const [orders, setOrders] = useState([]);
 
   useEffect(() => {
     if (user.role === "Guest") {
@@ -34,6 +35,25 @@ export default function POS({ user }) {
       getDish();
     }
   }, [user, router]);
+
+  const handleOnclick = (e) => {
+    e.preventDefault();
+
+    const dishName = e.target.querySelector(".dish-name").textContent;
+    const dishPrice = e.target.querySelector(".dish-price").textContent;
+    const dishQuantity = 1;
+
+    
+    // Add to orders
+    const newOrder = {
+      dishName,
+      dishPrice,
+      dishQuantity,
+    };
+
+    setOrders([...orders, newOrder]);
+    console.log(orders);
+  }
 
   async function getDish() {
     try {
@@ -66,20 +86,30 @@ export default function POS({ user }) {
               <div className="dishes">
                 {/* Map dishes */}
                 {dishes.map((dish) => (
-                  <button key={dish.id}>
+                  <button key={dish.id} onClick={handleOnclick}>
                     <div className="dish-item">
                       <div className="dish-image"> 
                           {dish.dishName.toUpperCase()} 
                       </div>
                       <div className="dish-name">{dish.dishName}</div>
-                      <div className="dish-price">${dish.price}</div>
+                      <div className="dish-price">P{dish.price}</div>
                     </div>
                   </button>
                 ))}
               </div>
             </div>
             <div className="pos-right">
-
+              <div className="orders">
+                {orders.map((order) => (
+                  <div key={order._id} className="order-item">
+                    <div className="name-quantity">
+                      <div className="order-quantity">{order.dishQuantity}x</div>
+                      <div className="order-name">{order.dishName}</div>
+                    </div>
+                    <div className="order-price">{order.dishPrice}</div>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>

@@ -16,9 +16,16 @@ const manager_sidebar_items = [
     href: '/inventory'
   },
   {
-    name: 'View Users',
+    name: 'Manager Users',
     icon: <RxDashboard />,
-    href: '/users'
+    href: '/users',
+    functions: [
+      {
+        name: 'Add New User',
+        icon: <RxArrowRight />,
+        href: '/users/addUser'
+      }
+    ]
   },
   {
     name: 'View Reports',
