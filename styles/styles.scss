@@ -439,6 +439,7 @@ table {
     button {
         border: 1px solid #ccc;
         border-radius: 1rem;
+        margin: 1rem;
         
         background-color: white;
         color: black;
@@ -447,10 +448,24 @@ table {
 
         // hover
         &:hover {
-            background-color: $lightgreen;
+            // darker off white
+            background-color: #f3f1f1;
         }
     }
 }
+
+
+.menu {
+    display: flex;
+    margin: 1rem;
+
+    .dishes {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+    }
+} 
+
+
 
 .dish-item {
     // Create a card
@@ -460,7 +475,6 @@ table {
 
     border-radius: 4px;
     padding: 1rem;
-    margin: 1rem;
 
 
     .dish-image {
@@ -468,7 +482,7 @@ table {
         height: 10rem;
         border-radius: 50%;
         background-color: #ccc;
-        margin-bottom: 1rem;
+        margin-bottom: 2rem;
         
         // center text
         display: flex;

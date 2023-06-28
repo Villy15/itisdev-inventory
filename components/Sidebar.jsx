@@ -11,6 +11,11 @@ const manager_sidebar_items = [
     href: '/'
   },
   {
+    name: 'View Menu',
+    icon: <RxDashboard />,
+    href: '/menu'
+  },
+  {
     name: 'View Inventory',
     icon: <RxDashboard />,
     href: '/inventory'
@@ -70,7 +75,25 @@ const stock_controller_sidebar_items = [
   {
     name: 'View Reports',
     icon: <RxDashboard />,
-    href: '/reports'
+    href: '/reports',
+    functions: [
+      {
+        name: 'View Increase Audit',
+        icon: <RxArrowRight />,
+        href: '/reports/increaseaudit'
+      },
+      {
+        name: 'View Expired Audit',
+        icon: <RxArrowRight />,
+        href: '/reports/expiredaudit'
+      },
+      {
+        name: 'View Missing Audit',
+        icon: <RxArrowRight />,
+        href: '/reports/missingaudit'
+      },
+      
+    ]
   },
 ];
 
