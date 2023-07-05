@@ -1,40 +1,53 @@
+const Table = ({ data, columns, currentPage, itemsPerPage  }) => {
+  function getTableHeaders() {
+    if (!columns || columns.length === 0 || data.length === 0) {
+      return null;
+    }
 
-const Table = ({data}) => {
-    function getTableHeaders() {
-        if (data.length === 0) {
-          return null;
-        }
-
-        console.log(data);
-    
-        const dataKeys = Object.keys(data[0]);
-        return dataKeys.map((key) => (
-          <th key={key}>{key}</th>
-        ));
-      }
-    
-      function getTableData() {
-        return data.map((data) => (
-          <tr key={data.id}>
-            {Object.values(data).map((value, index) => (
-              <td key={index}>{value}</td>
-            ))}
-          </tr>
-        ));
-      }
-      
     return (
-        <table>
-            <thead>
-                <tr>
-                    {getTableHeaders()}
-                </tr>
-            </thead>
-            <tbody>
-                {getTableData()}
-            </tbody>
-        </table>
-    )
-}
+      <>
+        <th className="row-number">#</th>
+        {columns.map((column) => (
+          <th key={column.key}>{column.label}</th>
+        ))}
+      </>
+    );
+  }
 
-export default Table
+  function getTableData() {
+    if (!columns || columns.length === 0 || data.length === 0) {
+      return null;
+    }
+  
+    const startIndex = (currentPage - 1) * itemsPerPage;
+  
+    return data.map((item, index) => (
+      <tr key={item.id}>
+        <td className="row-number">{startIndex + index + 1}</td>
+        {columns.map((column) => {
+          const cellData = item[column.key];
+          const dataType = typeof cellData;
+          const className = dataType === "number" ? "row-right" : "row-left";
+  
+          return (
+            <td key={column.key} className={className}>
+              {cellData}
+            </td>
+          );
+        })}
+      </tr>
+    ));
+  }
+
+
+  return (
+    <table>
+      <thead>
+        <tr>{getTableHeaders()}</tr>
+      </thead>
+      <tbody>{getTableData()}</tbody>
+    </table>
+  );
+};
+
+export default Table;
