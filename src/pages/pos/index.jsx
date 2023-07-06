@@ -1,5 +1,6 @@
 import Header from "@components/Header";
 import Sidebar from "@components/Sidebar";
+import Image from "next/image";
 
 import { withSessionSsr } from "@lib/withSession";
 import { useRouter } from "next/router";
@@ -89,7 +90,7 @@ export default function POS({ user }) {
                   <button key={dish.id} onClick={handleOnclick}>
                     <div className="dish-item">
                       <div className="dish-image"> 
-                          {dish.dishName.toUpperCase()} 
+                        <Image alt="image" src={`/images/${dish.dishPhoto}.jpg`} width={200} height={200}></Image>
                       </div>
                       <div className="dish-name">{dish.dishName}</div>
                       <div className="dish-price">P{dish.price}</div>
