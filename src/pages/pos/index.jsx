@@ -1,33 +1,61 @@
 import Header from "@components/Header";
 import Sidebar from "@components/Sidebar";
 import Image from "next/image";
-
 import { withSessionSsr } from "@lib/withSession";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
-export const getServerSideProps = withSessionSsr(
-  async function getServerSideProps({ req, res }) {
-    let user = req.session.user;
-    if (!user) {
-      user = {
-        role: "Guest",
-      }
-    }
-
-    return {
-      props: {
-        user,
-      },
+export const getServerSideProps = withSessionSsr(async ({ req }) => {
+  let user = req.session.user;
+  if (!user) {
+    user = {
+      role: "Guest",
     };
   }
-);
+
+  return {
+    props: {
+      user,
+    },
+  };
+});
+
+async function fetchAPI(url) {
+  const response = await fetch(url, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  if (!response.ok) {
+    throw new Error("Request failed with status " + response.status);
+  }
+  const data = await response.json();
+  return data;
+}
+
+async function postAPI(url, body) {
+  const response = await fetch(url, {
+    method: "POST",
+    body: JSON.stringify(body),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  if (!response.ok) {
+    throw new Error("Request failed with status " + response.status);
+  }
+  const data = await response.json();
+  return data;
+}
 
 export default function POS({ user }) {
   const router = useRouter();
 
   const [dishes, setDishes] = useState([]);
   const [orders, setOrders] = useState([]);
+  const [dataOrders, setDataOrders] = useState([]);
+  const [orderItems, setOrderItems] = useState([]);
 
   useEffect(() => {
     if (user.role === "Guest") {
@@ -37,63 +65,39 @@ export default function POS({ user }) {
     }
   }, [user, router]);
 
-  // clog dishes
-  useEffect(() => {
-    console.log(dishes);
-  }, [dishes]);
-  
-
   const handleOnclick = (dishId) => {
     const selectedDish = dishes.find((dish) => dish.dishId === dishId);
-  
+
     if (selectedDish) {
       const existingOrder = orders.find((order) => order.dishId === dishId);
-  
+
       if (existingOrder) {
-        // If the order already exists, update the quantity
-        const updatedOrders = orders.map((order) => {
-          if (order.dishId === dishId) {
-            return {
-              ...order,
-              dishQuantity: order.dishQuantity + 1,
-            };
-          }
-          return order;
-        });
-  
+        const updatedOrders = orders.map((order) =>
+          order.dishId === dishId ? { ...order, dishQuantity: order.dishQuantity + 1 } : order
+        );
+
         setOrders(updatedOrders);
       } else {
         const dishName = selectedDish.dishName;
         const dishPrice = selectedDish.price;
         const dishQuantity = 1;
-  
-        // Add to orders
+
         const newOrder = {
           dishId,
           dishName,
           dishPrice,
           dishQuantity,
         };
-  
+
         setOrders([...orders, newOrder]);
       }
     }
   };
+
   async function getDish() {
     try {
-      const response = await fetch('/api/dish/getDish', {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error('Request failed with status ' + response.status);
-      }
-      
-      const data = await response.json();
-      setDishes(data);       
+      const data = await fetchAPI("/api/dish/getDish");
+      setDishes(data);
     } catch (err) {
       console.error(err);
     }
@@ -101,21 +105,104 @@ export default function POS({ user }) {
 
   const totalPrice = orders.reduce((total, order) => total + order.dishPrice * order.dishQuantity, 0);
 
+
+  const handleCheckout = async () => {
+    const newOrder = {
+      orderId: Math.max(...dataOrders.map((i) => i.orderId)) + 1,
+      totalPrice,
+      tableNumber: 1,
+      orderDate: new Date().toLocaleString("en-US", { timeZone: "Asia/Singapore" }),
+      userId: user.id,
+    };
+  
+    await postOrder(newOrder);
+  
+    const orderItemId = Math.max(...orderItems.map((i) => i.order_itemId)) + 1;
+  
+    orders.forEach((order, index) => {
+      console.log("index " + index);
+      const newOrderItem = {
+        order_itemId: orderItemId + index,
+        orderId: newOrder.orderId,
+        dishId: order.dishId,
+        quantity: order.dishQuantity,
+      };
+      
+      console.log(newOrderItem.order_itemId);
+      postOrderItem(newOrderItem);
+    });
+  
+    
+    // Clear orders
+    setOrders([]);
+  };
+
+  useEffect(() => {
+    getOrders();
+  }, []);
+
+  useEffect(() => {
+    getOrders();
+  }, [dataOrders]);
+
+  async function getOrders() {
+    try {
+      const data = await fetchAPI("/api/order/getOrders");
+      setDataOrders(data);
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  async function postOrder(newOrder) {
+    try {
+      const data = await postAPI("/api/order/postOrder", newOrder);
+      console.log(data);
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  useEffect(() => {
+    getOrderItems();
+  }, []);
+
+  useEffect(() => {
+    getOrderItems();
+  }, [orderItems]);
+
+  async function getOrderItems() {
+    try {
+      const data = await fetchAPI("/api/order_item/getOrderItem");
+      setOrderItems(data);
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  async function postOrderItem(newOrderItem) {
+    try {
+      const data = await postAPI("/api/order_item/postOrderItem", newOrderItem);
+      console.log(data);
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
   return (
     <>
       <main>
-        <Sidebar role={user.role}/>
+        <Sidebar role={user.role} />
         <div className="main-section">
           <Header page={"POS"} user={user} />
           <div className="pos-system">
             <div className="pos-left">
               <div className="dishes">
-                {/* Map dishes */}
                 {dishes.map((dish) => (
                   <button key={dish.dishId} onClick={() => handleOnclick(dish.dishId)}>
                     <div className="dish-item">
-                      <div className="dish-image"> 
-                        <Image alt="image" src={`/images/${dish.dishPhoto}.jpg`} width={200} height={200}></Image>
+                      <div className="dish-image">
+                        <Image alt="image" src={`/images/${dish.dishPhoto}.jpg`} width={200} height={200} />
                       </div>
                       <div className="dish-name">{dish.dishName}</div>
                       <div className="dish-price">P{dish.price}</div>
@@ -133,7 +220,7 @@ export default function POS({ user }) {
                   <div className="price">Price</div>
                 </div>
                 {orders.map((order) => (
-                  <div key={order._id} className="order-item">
+                  <div key={order.dishId} className="order-item">
                     <div className="order-name">{order.dishName}</div>
                     <div className="order-quantity">{order.dishQuantity}</div>
                     <div className="order-price">{order.dishPrice}</div>
@@ -146,12 +233,14 @@ export default function POS({ user }) {
               </div>
               <div className="checkout">
                 <button className="cancel">Cancel</button>
-                <button className="proceed">Checkout</button>
+                <button className="checkout" onClick={handleCheckout}>
+                  Checkout
+                </button>
               </div>
             </div>
           </div>
         </div>
       </main>
     </>
-  )
+  );
 }
