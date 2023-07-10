@@ -35,23 +35,27 @@ export default function Transactions({ user }) {
 
   const [originalInventory, setOriginalInventory] = useState([]);
   const [inventory, setInventory] = useState([]);
+  const [inventoryNames, setInventoryNames] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     getInventory();
+    getNames();
   }, []);
 
 
   useEffect(() => {
     getInventory();
   }, [inventory]);
+
+  
   
 
   async function getInventory() {
     try {
-      const response = await fetch('/api/order/getOrders', {
+      const response = await fetch('/api/order_item/getOrderItem', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -63,18 +67,9 @@ export default function Transactions({ user }) {
       }
 
       const data = await response.json();
-      
-      // sort by orderDate descending
-      data.sort((a, b) => {
-        return new Date(b.orderDate) - new Date(a.orderDate);
-      });
+        // sort it by orderId desc    
+        data.sort((a, b) => (a.orderId < b.orderId) ? 1 : -1)
 
-      // 2023-07-10T13:43:50+00:00 Clean this format
-
-      data.forEach((order) => {
-        order.orderDate = new Date(order.orderDate).toLocaleString();
-      });
-    
       setOriginalInventory(data);
       setInventory(data);
     } catch (err) {
@@ -82,7 +77,26 @@ export default function Transactions({ user }) {
     }
   }
 
-  
+  async function getNames() {
+    try {
+      const response = await fetch('/api/inventory/getInventory', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error('Request failed with status ' + response.status);
+      }
+
+      const data = await response.json();
+      setInventoryNames(data);
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -96,13 +110,21 @@ export default function Transactions({ user }) {
 
   const tableProps = {
     columns: [
-      { label: 'Order Id', key: 'orderId' },
-      { label: 'Total Price', key: 'totalPrice' },
-      { label: 'Table Number', key: 'tableNumber' },
-      { label: 'Order Date', key: 'orderDate' },
-      { label: 'User Id', key: 'userId' },
+      { label: "Order ID", key: "orderId" },
+      {
+        label: "Dish Name",
+        key: "dishId",
+        mapData: (row) => getDishName(row.dishId),
+      },
+      { label: "Quantity", key: "quantity" },
     ],
   };
+
+  const getDishName = (dishId) => {
+    const dish = inventoryNames.find((item) => item.dishId === dishId);
+    return dish ? dish.ingredientName : "";
+  };
+
 
   const handleSearch = (event) => {
     const query = event.target.value;

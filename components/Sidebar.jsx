@@ -37,6 +37,16 @@ const manager_sidebar_items = [
     icon: <RxDashboard />,
     href: '/reports'
   },
+  {
+    name: 'View Orders',
+    icon: <RxDashboard />,
+    href: '/transactions'
+  },
+  {
+    name: 'View Order Items',
+    icon: <RxDashboard />,
+    href: '/order-items'
+  },
 ];
 
 const stock_controller_sidebar_items = [

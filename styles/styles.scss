@@ -432,12 +432,13 @@ table {
 
 .pos-left {
     margin: 1rem;
-    width: 60%;
+    width: 70%;
+    
 }
 
 .pos-right {
     margin: 1rem;
-    width: 40%;
+    width: 30%;
   
     .headers {
       padding: 1rem;
@@ -560,7 +561,7 @@ table {
 
 .dishes {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(6, 1fr);
 
     button {
         border: 1px solid #ccc;
