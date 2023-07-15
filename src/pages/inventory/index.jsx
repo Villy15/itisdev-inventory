@@ -75,7 +75,7 @@ const Inventory = ({ user }) => {
     columns: [
       { label: 'Ingredient Name', key: 'ingredientName' },
       { label: 'Quantity', key: 'quantity' },
-      { label: 'Unit', key: 'unit' },
+      { label: 'Unit Measurement', key: 'unit' },
       { label: 'Minimum Quantity', key: 'minquantity' },
     ],
   };
