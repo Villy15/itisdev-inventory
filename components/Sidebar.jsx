@@ -18,7 +18,14 @@ const manager_sidebar_items = [
   {
     name: 'View Inventory',
     icon: <RxDashboard />,
-    href: '/inventory'
+    href: '/inventory', 
+    functions: [
+      {
+        name: 'Add Food/Drink',
+        icon: <RxArrowRight />,
+        href: '/menu/adddish'
+      },
+    ]
   },
   {
     name: 'Manager Users',
@@ -35,7 +42,25 @@ const manager_sidebar_items = [
   {
     name: 'View Reports',
     icon: <RxDashboard />,
-    href: '/reports'
+    href: '/reports',
+    functions: [
+      {
+        name: 'View Increase Audit',
+        icon: <RxArrowRight />,
+        href: '/reports/increaseaudit'
+      },
+      {
+        name: 'View Expired Audit',
+        icon: <RxArrowRight />,
+        href: '/reports/expiredaudit'
+      },
+      {
+        name: 'View Missing Audit',
+        icon: <RxArrowRight />,
+        href: '/reports/missingaudit'
+      },
+      
+    ]
   },
   {
     name: 'View Orders',

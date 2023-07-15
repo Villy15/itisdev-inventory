@@ -52,6 +52,16 @@ const Reports = ({
     }
   }
 
+  const tableProps = {
+    columns: [
+      { label: 'Item name', key: 'inventoryId' },
+      { label: 'Quantity', key: 'quantity' },
+      { label: 'Unit of Measurement', key: 'unit' },
+      { label: 'Date Submitted', key: 'newDate' },
+      { label: 'Submitted by', key: 'userId' },
+    ],
+  };
+
 
   return (
     <main>
@@ -60,7 +70,12 @@ const Reports = ({
         <Header page={"Reports"} user={user} />
         <div className="reports">
           <h1>Expired Audit</h1>
-          <Table data={expired} />
+          <Table 
+              data={expired}
+              columns={tableProps.columns}
+              currentPage={1}
+              itemsPerPage={10}
+             />
         </div>
       </div>
     </main>

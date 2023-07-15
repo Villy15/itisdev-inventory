@@ -76,6 +76,14 @@ export default function Users({ user }) {
     )
   }
 
+  const tableProps = {
+    columns: [
+      { label: 'First Name', key: 'firstname' },
+      { label: 'Last Name', key: 'lastname' },
+      { label: 'Role', key: 'role' },
+    ],
+  };
+
   return (
     <>
       <main>
@@ -83,7 +91,12 @@ export default function Users({ user }) {
         <div className="main-section">
           <Header page={"Users"} user={user} />
           <div className="users">
-            <Table data={users} />
+            <Table 
+              data={users}
+              columns={tableProps.columns}
+              currentPage={1}
+              itemsPerPage={10}
+             />
           </div>
         </div>
       </main>
