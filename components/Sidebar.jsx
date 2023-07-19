@@ -145,6 +145,37 @@ const cashier_sidebar_items = [
   },  
 ];
 
+const chef_sidebar_items = [
+  {
+    name: 'View Menu',
+    icon: <RxDashboard />,
+    href: '/menu'
+  },
+  {
+    name: 'View Inventory',
+    icon: <RxDashboard />,
+    href: '/inventory', 
+    functions: [
+      {
+        name: 'Add Food/Drink',
+        icon: <RxArrowRight />,
+        href: '/menu/adddish'
+      },
+    ]
+  },
+  {
+    name: 'View Units',
+    icon: <RxDashboard />,
+    href: '/inventory', 
+    functions: [
+      {
+        name: 'Add New Units',
+        icon: <RxArrowRight />,
+        href: '/units/addunit'
+      },
+    ]
+  },
+];
 
 const Sidebar = ({role}) => {
   const [sidebarItems, setSidebarItems] = useState([]);
@@ -159,6 +190,9 @@ const Sidebar = ({role}) => {
         break;
       case "Cashier":
         setSidebarItems(cashier_sidebar_items);
+        break;
+      case "Chef":
+        setSidebarItems(chef_sidebar_items);
         break;
       default:
         setSidebarItems([

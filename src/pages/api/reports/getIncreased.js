@@ -7,7 +7,14 @@ async function getExpired(req, res) {
     try {
         let { data: reports, error } = await supabase
             .from('increase_inventory')
-            .select('*');
+            .select(`
+                inventory (inventoryId, ingredientName), 
+                quantity, 
+                unit,
+                newDate, 
+                userId,
+                users (id, lastname)
+            `);
 
         if (error) {
             throw error;

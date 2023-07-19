@@ -3,6 +3,9 @@ const Table = ({ data, columns, currentPage, itemsPerPage  }) => {
     if (!columns || columns.length === 0 || data.length === 0) {
       return null;
     }
+    console.log("HIIIIIIIIIIII");
+    console.log(data);
+    console.log(columns);
 
     return (
       <>
@@ -25,7 +28,7 @@ const Table = ({ data, columns, currentPage, itemsPerPage  }) => {
       <tr key={item.id}>
         <td className="row-number">{startIndex + index + 1}</td>
         {columns.map((column) => {
-          const cellData = item[column.key];
+          const cellData = getNestedValue(item, column.key);
           const dataType = typeof cellData;
           const className = dataType === "number" ? "row-right" : "row-left";
   
@@ -38,6 +41,22 @@ const Table = ({ data, columns, currentPage, itemsPerPage  }) => {
       </tr>
     ));
   }
+  
+  function getNestedValue(obj, key) {
+    const keys = key.split(".");
+    let value = obj;
+  
+    for (const nestedKey of keys) {
+      if (value && typeof value === "object" && nestedKey in value) {
+        value = value[nestedKey];
+      } else {
+        return null;
+      }
+    }
+  
+    return value;
+  }
+  
 
 
   return (
