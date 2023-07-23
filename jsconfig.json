@@ -7,6 +7,7 @@
       "@lib/*": ["./lib/*"],
       "@supabase": ["./supabase"],
       "@images/*": ["./public/images/*"],
+      "@api/*": ["./utils/apiFunctions"],
     }
   }
 }

@@ -1,118 +1,183 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
+import { fetchAPI, postAPI, patchAPI, deleteAPI } from '@api/*';
 
 const ReplenishStockForm = ({user}) => {
     const router = useRouter();
 
     const [inventory, setInventory] = useState([]);
+    const [variant, setVariant] = useState([]); 
+    const [units, setUnits] = useState([]); 
+    const [conversions, setConversions] = useState([]);  
+
     const [formValues, setFormValues] = useState({
         name: '',
+        variant: '',
         quantity: '',
-        description: '',
+        units: '',
     });
+
+    const[selectedInventoryId, setSelectedInventoryId] = useState(null);
+
+    const [showConfirmation, setShowConfirmation] = useState(false);
+    const [confirmationData, setConfirmationData] = useState(null);
 
     useEffect(() => {
         getInventory();
+        getUnits();
+        getConversions();
     }, []);
+
+    useEffect(() => {
+        getInventory();
+    }, [showConfirmation]);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
+        const inventoryId = inventory.find((i) => i.ingredientName === value)?.inventoryId;
+        setSelectedInventoryId(inventoryId); // Update selected inventoryId
         setFormValues({ ...formValues, [name]: value });
     };
 
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        if (!formValues.name || !formValues.quantity) {
-            alert('Please fill out all required (*) fields');
+        if (!formValues.name || !formValues.quantity  /* || !formValues.units */) {
+            alert('Please fill in all required fields!');
             return;
         }
 
-        if (formValues.description == '') {
-            formValues.description = 'No description';
-        }
+        // Calculate current and after quantities
+        const selectedInventory = inventory.find((i) => i.ingredientName == formValues.name);
+        const convertedQuantity = formValues.units ? convertUnits(formValues.units, selectedInventory.unit, formValues.quantity) : formValues.quantity;
+        const newQuantity = parseFloat(selectedInventory.quantity) + parseFloat(convertedQuantity);
+        
 
-        const newIncrease_Inventory = { 
+        setConfirmationData({
+            name: formValues.name,
+            quantity: newQuantity,
+            newQuantity: `${newQuantity} ${selectedInventory.unit}`,
+        });
+
+        // Show the confirmation popup
+        setShowConfirmation(true)
+    };
+
+    // Function to handle form submission after confirmation
+    const handleConfirmationSubmit = () => {
+        const newIncrease_Inventory = {
             newDate: new Date().toLocaleString('en-US', { timeZone: 'Asia/Singapore' }),
             userId: user,
             inventoryId: inventory.find((i) => i.ingredientName === formValues.name).inventoryId,
-            quantity: formValues.quantity,
+            quantity: confirmationData?.quantity,
             unit: inventory.find((i) => i.ingredientName === formValues.name).unit,
-            // description: formValues.description,
         };
 
         const updateInventoryQuantity = {
             inventoryId: inventory.find((i) => i.ingredientName === formValues.name).inventoryId,
-            quantity: parseFloat(formValues.quantity) + parseFloat(inventory.find((i) => i.ingredientName === formValues.name).quantity),
+            quantity: confirmationData?.quantity,
         };
 
+        console.log(newIncrease_Inventory);
+        console.log(updateInventoryQuantity);
         postIncreaseInventory(newIncrease_Inventory);
         patchInventory(updateInventoryQuantity);
 
+        // Reset the form values
         setFormValues({
             name: '',
+            variant: '',
             quantity: '',
-            description: '',
+            units: '',
         });
+
+        // Hide the confirmation popup
+        setShowConfirmation(false);
     };
+
+    const convertUnits = (fromUnit, toUnit, quantity) => {
+        const conversion = conversions.find(
+            (conversion) => conversion.from_unit == fromUnit && conversion.to_unit == toUnit
+        );
+
+        if (!conversion) {
+            console.log('Conversion not found!');
+            return quantity; // Return the original quantity if conversion not found
+        }
+
+        return quantity * conversion.to_quantity;
+    };
+
+
+    const handleCancelOrder = () => {
+        // Clear the form values
+        setFormValues({
+          name: '',
+          variant: '',
+          quantity: '',
+          units: '',
+        });
+    
+        // Hide the confirmation popup
+        setShowConfirmation(false);
+      };
 
     async function getInventory() {
         try {
-            const response = await fetch('/api/inventory/getInventory', {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            });
-
-            if (!response.ok) {
-                throw new Error('Request failed with status ' + response.status);
-            }
-
-            const data = await response.json();
+            const data = await fetchAPI("/api/inventory/getInventoryWithId");
             setInventory(data);
         } catch (err) {
             console.error(err);
         }
     }
- 
+
+    async function getUnits() {
+        try {
+            const data = await fetchAPI("/api/units_table/getUnits");
+            setUnits(data);
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
+    async function getConversions() {
+        try {
+            const data = await fetchAPI("/api/conversion_table/getConversions");
+            setConversions(data);
+        } catch (err) {
+            console.error(err);
+        }
+    }
+;
+
+    useEffect(() => {
+        async function getVariant() {
+            try { 
+                const data = await fetchAPI(`/api/variation/getVariant?inventoryId=${selectedInventoryId}`);
+                setVariant(data);
+            } catch (err) {
+                console.error(err);
+            }
+        }
+    
+        if (selectedInventoryId)
+            getVariant();
+    }, [selectedInventoryId]);
+
+
     async function postIncreaseInventory(newIncrease_Inventory) {
         try {
-            const response = await fetch('/api/inventory/postIncreaseInventory', {
-                method: 'POST',
-                body: JSON.stringify(newIncrease_Inventory),
-                headers: {
-                    'Content-Type': 'application/json',
-                }
-            });
-
-            if (!response.ok) {
-                throw new Error('Request failed with status ' + response.status);
-            }
-
-            const data = await response.json();
+            const data = await postAPI('/api/inventory/postIncreaseInventory', newIncrease_Inventory);
+            return data;
         } catch (error) {
             console.error(error);
         }
     }
 
-
     async function patchInventory(updateInventoryQuantity) {
         try {
-            const response = await fetch('/api/inventory/patchInventory', {
-                method: 'PATCH',
-                body: JSON.stringify(updateInventoryQuantity),
-                headers: {
-                    'Content-Type': 'application/json',
-                }
-            });
-            
-            if (!response.ok) {
-                throw new Error('Request failed with status ' + response.status);
-            }
-
-            const data = await response.json();
-            router.push('/inventory');
+            const data = await patchAPI('/api/inventory/patchInventory', updateInventoryQuantity);
+            return data;
         } catch (error) {
             console.error(error);
         }
@@ -145,40 +210,71 @@ const ReplenishStockForm = ({user}) => {
                         ))}
                     </select>
                 </div>
+                {variant.length > 0 && (
+                    <div className="form-group">
+                        <label htmlFor="name"> Variant<span>* </span>
+                        </label>
+                        <select
+                            type="text"
+                            name="variant"
+                            id="variant"
+                            value={formValues.variant}
+                            onChange={handleInputChange}
+                        >
+                            <option value="" hidden>Select Variant</option>
+                            {variant.map((i) => (
+                                <option key={i.variationId} value={i.variationName}>
+                                    {i.variationName}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+                )}
                 <div className="form-group">
                     <label htmlFor="quantity">Quantity <span>* </span>
-                        {formValues.name && (
-                            <span className="current-quantity">
-                                {/* Add a heading of Current Quantity of <Name>  */}
-                                Input in {inventory.find((i) => i.ingredientName === formValues.name)?.unit}
-                            </span>
-                        )}
                     </label>
                     <input
-                        type="text"
+                        type="number"
                         name="quantity"
                         id="quantity"
                         value={formValues.quantity}
                         onChange={handleInputChange}
                     />
                 </div>
-                <div className="form-group">
-                    <label htmlFor="description">Description</label>
-                    <input
-                        type="text"
-                        name="description"
-                        id="description"
-                        value={formValues.description}
-                        onChange={handleInputChange}
-                        className='description'
-                    />
-                </div>
+                {variant.length < 1 && (
+                    <div className="form-group">
+                        <label htmlFor="quantity">Unit Measurement <span>* </span>
+                        </label>
+                        <select
+                            type="text"
+                            name="units"
+                            id="units"
+                            value={formValues.units}
+                            onChange={handleInputChange}
+                        >
+                            <option value="" hidden>Select Unit</option>
+                            {units.map((i) => (
+                                <option key={i.unitshort} value={i.unitshort}>
+                                    {i.unitshort}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+                    
+                )}
                 <button type="button" 
                     onClick={
                         () => router.push('/inventory')
                     }> Cancel</button>
-                <button type="submit">Replenish</button>
-                {/* Add Cancel Button */}
+                <button type="submit">Save</button>
+                {showConfirmation && (
+                    <div className='confirmation-popup'>
+                        <p>Updated {confirmationData?.name}</p>
+                        <p>New Quantity: {confirmationData?.newQuantity}</p>
+                        <button onClick={handleConfirmationSubmit}>Confirm Record</button>
+                        <button onClick={handleCancelOrder}>Cancel Record</button>
+                    </div>
+                )}
             </form>
         </div>
     )

@@ -19,6 +19,7 @@ async function getDishRecipe(req, res) {
 
         if (error) {
             throw error;
+            
         }
 
         res.send(recipes);

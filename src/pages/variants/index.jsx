@@ -1,9 +1,10 @@
 import Header from "@components/Header";
 import Sidebar from "@components/Sidebar";
 import Table from "@components/Table";
-import { fetchAPI, postAPI, patchAPI, deleteAPI } from '@api/*';
 
 import { withSessionSsr } from "@lib/withSession";
+
+import Link from "next/link";
 import { useState, useEffect } from "react";
 
 export const getServerSideProps = withSessionSsr(async function getServerSideProps({ req, res }) {
@@ -35,21 +36,32 @@ const Inventory = ({ user }) => {
 
   async function getInventory() {
     try {
-        const data = await fetchAPI("/api/inventory/getInventory");
-        setOriginalInventory(data);
+      const response = await fetch('/api/variation/getAllVariants', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error('Request failed with status ' + response.status);
+      }
+
+      const data = await response.json();
+      setOriginalInventory(data);
       setInventory(data);
     } catch (err) {
-        console.error(err);
+      console.error(err);
     }
-}
+  }
 
-  useEffect(() => {
-    const filteredInventory = originalInventory.filter((item) =>
-      item.ingredientName.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-    setCurrentPage(1);
-    setInventory(filteredInventory);
-  }, [searchQuery, originalInventory]);
+  // useEffect(() => {
+  //   const filteredInventory = originalInventory.filter((item) =>
+  //     item.ingredientName.toLowerCase().includes(searchQuery.toLowerCase())
+  //   );
+  //   setCurrentPage(1);
+  //   setInventory(filteredInventory);
+  // }, [searchQuery, originalInventory]);
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -61,10 +73,10 @@ const Inventory = ({ user }) => {
 
   const tableProps = {
     columns: [
-      { label: 'Ingredient Name', key: 'ingredientName' },
-      { label: 'Quantity', key: 'quantity' },
+      { label: 'Ingredient Name', key: 'inventory.ingredientName' },
+      { label: 'Variation name', key: 'variationName' },
+      { label: 'Amount', key: 'amount' },
       { label: 'Unit Measurement', key: 'unit' },
-      { label: 'Minimum Quantity', key: 'minquantity' },
     ],
   };
 
@@ -82,7 +94,7 @@ const Inventory = ({ user }) => {
     <main>
       <Sidebar role={user.role} />
       <div className="main-section">
-        <Header page="View Inventory" user={user} />
+        <Header page="View Variants" user={user} />
         <div className="inventory">
           <div className="inventory-functions">
             <div>
@@ -120,10 +132,6 @@ const Pagination = ({ itemsPerPage, totalItems, currentPage, paginate }) => {
   for (let i = 1; i <= Math.ceil(totalItems / itemsPerPage); i++) {
     pageNumbers.push(i);
   }
-
-  useEffect(() => {
-    console.log(currentPage);
-  }, [currentPage]);
 
   return (
     <ul className="pagination">

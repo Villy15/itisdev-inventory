@@ -8,6 +8,7 @@ async function getInventory(req, res) {
         let { data: ingredients, error } = await supabase
             .from('inventory')
             .select(`
+                inventoryId,
                 ingredientName,
                 quantity,
                 unit,

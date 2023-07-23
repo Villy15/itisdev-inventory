@@ -1,15 +1,17 @@
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 
-const InputExpiredForm = ({user}) => {
+const AddVariantForm = () => {
     const router = useRouter();
 
     const [inventory, setInventory] = useState([]);
     const [formValues, setFormValues] = useState({
         name: '',
-        quantity: '',
-        description: '',
+        variant: '',
+        amount: '',
+        unit: '',
     });
+    const[selectedInventoryId, setSelectedInventoryId] = useState(null);
 
     useEffect(() => {
         getInventory();
@@ -17,6 +19,8 @@ const InputExpiredForm = ({user}) => {
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
+        const inventoryId = inventory.find((i) => i.ingredientName === value)?.inventoryId;
+        setSelectedInventoryId(inventoryId); // Update selected inventoryId
         setFormValues({ ...formValues, [name]: value });
     };
 
@@ -24,37 +28,31 @@ const InputExpiredForm = ({user}) => {
         e.preventDefault();
 
         if (!formValues.name || !formValues.quantity) {
-            alert('Please fill out all fields');
+            alert('Please fill out all required (*) fields');
             return;
         }
 
-        if (formValues.description == '') {
-            formValues.description = 'No description';
-        }
-
-        const newExpired = { 
+        const newIncrease_Inventory = { 
             newDate: new Date().toLocaleString('en-US', { timeZone: 'Asia/Singapore' }),
             userId: user,
             inventoryId: inventory.find((i) => i.ingredientName === formValues.name).inventoryId,
             quantity: formValues.quantity,
             unit: inventory.find((i) => i.ingredientName === formValues.name).unit,
             // description: formValues.description,
-         };
-
-
+        };
 
         const updateInventoryQuantity = {
             inventoryId: inventory.find((i) => i.ingredientName === formValues.name).inventoryId,
-            quantity: parseFloat(inventory.find((i) => i.ingredientName === formValues.name).quantity) - parseFloat(formValues.quantity) ,
+            quantity: parseFloat(formValues.quantity) + parseFloat(inventory.find((i) => i.ingredientName === formValues.name).quantity),
         };
 
-        postExpiredIngredient(newExpired);
+        postIncreaseInventory(newIncrease_Inventory);
         patchInventory(updateInventoryQuantity);
 
         setFormValues({
             name: '',
+            variant: '',
             quantity: '',
-            description: '',
         });
     };
 
@@ -78,50 +76,6 @@ const InputExpiredForm = ({user}) => {
         }
     }
  
-    async function postExpiredIngredient(newExpired) {
-        try {
-            const response = await fetch('/api/inventory/postExpired', {
-                method: 'POST',
-                body: JSON.stringify(newExpired),
-                headers: {
-
-                    
-                    'Content-Type': 'application/json',
-                }
-            });
-
-            if (!response.ok) {
-                throw new Error('Request failed with status ' + response.status);
-            }
-
-            const data = await response.json();
-            console.log(data);
-        } catch (error) {
-            console.error(error);
-        }
-    }
-
-    async function patchInventory(updateInventoryQuantity) {
-        try {
-            const response = await fetch('/api/inventory/patchInventory', {
-                method: 'PATCH',
-                body: JSON.stringify(updateInventoryQuantity),
-                headers: {
-                    'Content-Type': 'application/json',
-                }
-            });
-            
-            if (!response.ok) {
-                throw new Error('Request failed with status ' + response.status);
-            }
-
-            const data = await response.json();
-            router.push('/inventory');
-        } catch (error) {
-            console.error(error);
-        }
-    }
-
 
     return (
         <div className='add-inventory-form'>
@@ -131,10 +85,9 @@ const InputExpiredForm = ({user}) => {
                         {formValues.name && (
                             <span className="current-quantity">
                                 {/* Add a heading of Current Quantity of <Name>  */}
-                                Current Quantity: {inventory.find((i) => i.ingredientName === formValues.name)?.quantity} {inventory.find((i) => i.ingredientName === formValues.name)?.unit}
+                                    Current Quantity: {inventory.find((i) => i.ingredientName === formValues.name)?.quantity} {inventory.find((i) => i.ingredientName === formValues.name)?.unit}
                             </span>
                         )}
-
                     </label>
                     <select
                         type="text"
@@ -152,31 +105,47 @@ const InputExpiredForm = ({user}) => {
                     </select>
                 </div>
                 <div className="form-group">
-                    <label htmlFor="quantity">Quantity <span>* </span> 
-                        {formValues.name && (
-                            <span className="current-quantity">
-                                {/* Add a heading of Current Quantity of <Name>  */}
-                                Input in {inventory.find((i) => i.ingredientName === formValues.name)?.unit}
-                            </span>
-                        )}
-
+                    <label htmlFor="quantity">Variant name <span>* </span>
                     </label>
                     <input
                         type="text"
-                        name="quantity"
-                        id="quantity"
-                        value={formValues.quantity}
+                        name="variant"
+                        id="variant"
+                        value={formValues.variant}
+                        onChange={handleInputChange}
+                    />
+                </div>
+                <div className="form-group">
+                    <label htmlFor="quantity">Unit <span>* </span>
+                    </label>
+                    <input
+                        type="text"
+                        name="unit"
+                        id="unit"
+                        value={formValues.unit}
+                        onChange={handleInputChange}
+                    />
+                </div>
+                <div className="form-group">
+                    <label htmlFor="quantity">Amount <span>* </span>
+                    </label>
+                    <input
+                        type="text"
+                        name="amount"
+                        id="amount"
+                        value={formValues.amount}
                         onChange={handleInputChange}
                     />
                 </div>
                 <button type="button" 
                     onClick={
-                        () => router.push('/inventory')
+                        () => router.push('/variants')
                     }> Cancel</button>
                 <button type="submit">Submit</button>
+                {/* Add Cancel Button */}
             </form>
         </div>
-    )
+    );
 }
 
-export default InputExpiredForm
+export default AddVariantForm

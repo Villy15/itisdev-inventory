@@ -1,19 +1,21 @@
 import { withSessionRoute } from "@lib/withSession";
 import supabase from "@supabase";
 
-export default withSessionRoute(getDryConversion);
+export default withSessionRoute(getUnits);
 
-async function getDryConversion(req, res) {
+async function getUnits(req, res) {
     try {
-        let { data: dry_conversion, error } = await supabase
-            .from('dry_conversion')
-            .select('*');
+        let { data: ingredients, error } = await supabase
+            .from('units_table')
+            .select(`
+                *
+            `);
 
         if (error) {
             throw error;
         }
 
-        res.send(dry_conversion);
+        res.send(ingredients);
     } catch (error) {
         res.statusCode = 500;
         res.send({ error: "Server error" });

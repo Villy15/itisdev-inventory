@@ -1,6 +1,6 @@
 import Header from "@components/Header";
 import Sidebar from "@components/Sidebar";
-import ReplenishStockForm from "@components/Inventory/ReplenishStockForm";
+import AddVariantForm from "@components/Variant/AddVariantForm";
 
 import { withSessionSsr } from "@lib/withSession";
 
@@ -22,18 +22,18 @@ export const getServerSideProps = withSessionSsr(
     }
 );
 
-const ReplenishStock = ({
+const AddVariant = ({
     user
 }) => {
     return (
         <main>
             <Sidebar role={user.role}/>
             <div className="main-section">
-                <Header page={"Record Purchase"} user={user} />
-                <ReplenishStockForm user={user.id}/>                
+                <Header page={"Add New Variant"} user={user} />
+                <AddVariantForm user={user.id}/>                
             </div>
         </main>
     )
 }
 
-export default ReplenishStock;
+export default AddVariant;

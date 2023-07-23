@@ -1,26 +1,24 @@
 import { withSessionRoute } from "@lib/withSession";
 import supabase from "@supabase";
 
-export default withSessionRoute(getExpired);
+export default withSessionRoute(getVariants);
 
-async function getExpired(req, res) {
+async function getVariants(req, res) {
     try {
-        let { data: reports, error } = await supabase
-            .from('increase_inventory')
+        let { data: ingredients, error } = await supabase
+            .from('variation')
             .select(`
                 inventory (inventoryId, ingredientName), 
-                quantity, 
-                unit,
-                newDate,
-                userId,
-                users (id, lastname)
+                variationName,
+                amount,
+                unit
             `);
 
         if (error) {
             throw error;
         }
 
-        res.send(reports);
+        res.send(ingredients);
     } catch (error) {
         res.statusCode = 500;
         res.send({ error: "Server error" });

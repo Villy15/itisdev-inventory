@@ -132,7 +132,7 @@ const AddInventoryForm = () => {
                     onClick={
                         () => router.push('/inventory')
                     }> Cancel</button>
-                <button type="submit">Add</button>
+                <button type="submit">Save</button>
             </form>
         </div>
     )

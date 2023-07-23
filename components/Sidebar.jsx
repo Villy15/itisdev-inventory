@@ -19,48 +19,45 @@ const manager_sidebar_items = [
     name: 'View Inventory',
     icon: <RxDashboard />,
     href: '/inventory', 
-    functions: [
-      {
-        name: 'Add Food/Drink',
-        icon: <RxArrowRight />,
-        href: '/menu/adddish'
-      },
-    ]
   },
+  {
+    name: 'Add Food/Drink',
+    icon: <RxArrowRight />,
+    href: '/menu/adddish'
+  },
+  {
+    name: 'Record Purchase',
+    href: '/inventory/replenishstock',
+  }, 
   {
     name: 'Manager Users',
     icon: <RxDashboard />,
-    href: '/users',
-    functions: [
-      {
-        name: 'Add New User',
-        icon: <RxArrowRight />,
-        href: '/users/addUser'
-      }
-    ]
+    href: '/users'
+  },
+  {
+    name: 'Add New User',
+    icon: <RxArrowRight />,
+    href: '/users/addUser'
   },
   {
     name: 'View Reports',
     icon: <RxDashboard />,
     href: '/reports',
-    functions: [
-      {
-        name: 'View Increase Audit',
-        icon: <RxArrowRight />,
-        href: '/reports/increaseaudit'
-      },
-      {
-        name: 'View Expired Audit',
-        icon: <RxArrowRight />,
-        href: '/reports/expiredaudit'
-      },
-      {
-        name: 'View Missing Audit',
-        icon: <RxArrowRight />,
-        href: '/reports/missingaudit'
-      },
-      
-    ]
+  },
+  {
+    name: 'View Increase Audit',
+    icon: <RxArrowRight />,
+    href: '/reports/increaseaudit'
+  },
+  {
+    name: 'View Expired Audit',
+    icon: <RxArrowRight />,
+    href: '/reports/expiredaudit'
+  },
+  {
+    name: 'View Missing Audit',
+    icon: <RxArrowRight />,
+    href: '/reports/missingaudit'
   },
   {
     name: 'View Orders',
@@ -77,58 +74,35 @@ const manager_sidebar_items = [
 const stock_controller_sidebar_items = [
   {
     name: 'Dashboard',
-    icon: <RxDashboard />,
     href: '/'
   },
   {
     name: 'View Inventory',
-    icon: <RxDashboard />,
-    href: '/inventory',
-    functions: [
-      {
-        name: 'Add New Inventory',
-        icon: <RxArrowRight />,
-        href: '/inventory/addinventory'
-      },
-      {
-        name: 'Replenish Stock',
-        icon: <RxArrowRight />,
-        href: '/inventory/replenishstock',
-      },
-      {
-        name: 'Input Expired',
-        icon: <RxArrowRight />,
-        href: '/inventory/expired',
-      },
-      {
-        name: 'Input Physical Count',
-        icon: <RxArrowRight />,
-        href: '/inventory/physicalcount',
-      },
-    ]
+    href: '/inventory'
   },
   {
-    name: 'View Reports',
-    icon: <RxDashboard />,
-    href: '/reports',
-    functions: [
-      {
-        name: 'View Increase Audit',
-        icon: <RxArrowRight />,
-        href: '/reports/increaseaudit'
-      },
-      {
-        name: 'View Expired Audit',
-        icon: <RxArrowRight />,
-        href: '/reports/expiredaudit'
-      },
-      {
-        name: 'View Missing Audit',
-        icon: <RxArrowRight />,
-        href: '/reports/missingaudit'
-      },
-      
-    ]
+    name: 'Add New Inventory',
+    href: '/inventory/addinventory'
+  },
+  {
+    name: 'Record Purchase',
+    href: '/inventory/replenishstock',
+  }, 
+  {
+    name: 'Input Expired',
+    href: '/inventory/expired',
+  }, 
+  {
+    name: 'Input Physical Count',
+    href: '/inventory/physicalcount',
+  },
+  {
+    name: 'View Variants',
+    href: '/variants',
+  },
+  {
+    name: 'Add New Variants',
+    href: '/variants/addVariant',
   },
 ];
 
@@ -155,26 +129,13 @@ const chef_sidebar_items = [
     name: 'View Inventory',
     icon: <RxDashboard />,
     href: '/inventory', 
-    functions: [
-      {
-        name: 'Add Food/Drink',
-        icon: <RxArrowRight />,
-        href: '/menu/adddish'
-      },
-    ]
   },
   {
-    name: 'View Units',
-    icon: <RxDashboard />,
-    href: '/inventory', 
-    functions: [
-      {
-        name: 'Add New Units',
-        icon: <RxArrowRight />,
-        href: '/units/addunit'
-      },
-    ]
+    name: 'Add Food/Drink',
+    icon: <RxArrowRight />,
+    href: '/menu/adddish'
   },
+  
 ];
 
 const Sidebar = ({role}) => {
@@ -221,7 +182,7 @@ const Sidebar = ({role}) => {
                   {item.icon}
                   <span>{item.name}</span>
                 </Link>
-                {item.functions && (
+                {/* {item.functions && (
                   <ul className="functions-dropdown">
                     {item.functions.map((func, index) => (
                       <li key={index}>
@@ -232,7 +193,7 @@ const Sidebar = ({role}) => {
                       </li>
                     ))}
                   </ul>
-                )}
+                )} */}
               </div>
             </li>
           ))}

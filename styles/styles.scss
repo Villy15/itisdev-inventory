@@ -51,15 +51,20 @@ table {
     td {
         padding: 10px;
         text-align: left;
-        border-bottom: 1px solid #ddd;
+        border: 1px solid #ddd;
         text-transform: capitalize;
         text-align: center;
     }
 
     th {
-        background-color: $darkgreen;
+        border: none;
+    }
+
+    th {
+        background-color: $lightblue;
         font-weight: bold;
         text-align: center;
+        color: white;
     }
 
     tbody tr:hover {
@@ -73,14 +78,14 @@ table {
 
     .row-left {
         text-align: left;
-        padding-left: 5%;
-        padding-right: 5%;
+        // padding-left: 5%;
+        // padding-right: 5%;
     }
 
     .row-right {
         text-align: right;
-        padding-left: 5%;
-        padding-right: 11%;
+        // padding-left: 5%;
+        // padding-right: 11%;
     }
 }
 
@@ -200,7 +205,7 @@ table {
     color: white;
 
     h1 {
-        font-weight: 300;
+        font-weight: 600;
     }
 
     .right-side {
@@ -232,7 +237,7 @@ table {
         cursor: pointer;
 
         span {
-            font-weight: 300;
+            font-weight: 500;
             font-size: larger;
         }
     }
@@ -365,6 +370,7 @@ table {
 
 .ingredients-table {
     width: 100%;
+
     border-collapse: collapse;
     margin-bottom: 20px;
 
@@ -715,4 +721,43 @@ table {
             font-weight: 300;
         }
     }
+}
+
+// SCSS for the confirmation popup
+.confirmation-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #fff;
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  z-index: 9999;
+
+  p {
+    margin: 0 0 10px;
+  }
+
+  button {
+    margin-right: 10px;
+    padding: 8px 16px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+
+    &:hover {
+      background-color: #0056b3;
+    }
+
+    &:last-child {
+      background-color: #dc3545;
+
+      &:hover {
+        background-color: #b30015;
+      }
+    }
+  }
 }
