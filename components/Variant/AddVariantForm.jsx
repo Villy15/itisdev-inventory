@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
+import { fetchAPI, postAPI, patchAPI, deleteAPI } from '@api/*';
+
 
 const AddVariantForm = () => {
     const router = useRouter();
@@ -9,68 +11,81 @@ const AddVariantForm = () => {
         name: '',
         variant: '',
         amount: '',
-        unit: '',
+        units: '',
     });
-    const[selectedInventoryId, setSelectedInventoryId] = useState(null);
+
+    const [units, setUnits] = useState([]);
+    const [variants, setVariants] = useState([]);
 
     useEffect(() => {
         getInventory();
+        getUnits();
+        getAllVariants();
     }, []);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        const inventoryId = inventory.find((i) => i.ingredientName === value)?.inventoryId;
-        setSelectedInventoryId(inventoryId); // Update selected inventoryId
         setFormValues({ ...formValues, [name]: value });
     };
 
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        if (!formValues.name || !formValues.quantity) {
-            alert('Please fill out all required (*) fields');
+        if (!formValues.name || !formValues.variant || !formValues.amount || !formValues.units) {
+            alert('Please fill out all fields');
             return;
         }
 
-        const newIncrease_Inventory = { 
-            newDate: new Date().toLocaleString('en-US', { timeZone: 'Asia/Singapore' }),
-            userId: user,
+        const newVariant = {
+            variationId: Math.max.apply(Math, variants.map(function(i) { return i.variationId; })) + 1,
             inventoryId: inventory.find((i) => i.ingredientName === formValues.name).inventoryId,
-            quantity: formValues.quantity,
-            unit: inventory.find((i) => i.ingredientName === formValues.name).unit,
-            // description: formValues.description,
+            amount: formValues.amount,
+            unit: formValues.units,
+            variationName: formValues.variant,
         };
-
-        const updateInventoryQuantity = {
-            inventoryId: inventory.find((i) => i.ingredientName === formValues.name).inventoryId,
-            quantity: parseFloat(formValues.quantity) + parseFloat(inventory.find((i) => i.ingredientName === formValues.name).quantity),
-        };
-
-        postIncreaseInventory(newIncrease_Inventory);
-        patchInventory(updateInventoryQuantity);
+        
+        console.log(newVariant);
+        postVariation(newVariant);
 
         setFormValues({
             name: '',
             variant: '',
-            quantity: '',
+            amount: '',
+            units: '',
         });
     };
 
     async function getInventory() {
         try {
-            const response = await fetch('/api/inventory/getInventory', {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            });
-
-            if (!response.ok) {
-                throw new Error('Request failed with status ' + response.status);
-            }
-
-            const data = await response.json();
+            const data = await fetchAPI("/api/inventory/getInventoryWithId");
             setInventory(data);
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
+    async function getUnits() {
+        try {
+            const data = await fetchAPI("/api/units_table/getUnits");
+            setUnits(data);
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
+    async function getAllVariants() {
+        try {
+            const data = await fetchAPI("/api/variation/getAllVariantswId");
+            setVariants(data);
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
+    async function postVariation(newVariant) {
+        try {
+            const data = await postAPI("/api/variation/postVariant", newVariant);
+            console.log(data);
         } catch (err) {
             console.error(err);
         }
@@ -116,26 +131,34 @@ const AddVariantForm = () => {
                     />
                 </div>
                 <div className="form-group">
-                    <label htmlFor="quantity">Unit <span>* </span>
-                    </label>
-                    <input
-                        type="text"
-                        name="unit"
-                        id="unit"
-                        value={formValues.unit}
-                        onChange={handleInputChange}
-                    />
-                </div>
-                <div className="form-group">
                     <label htmlFor="quantity">Amount <span>* </span>
                     </label>
                     <input
-                        type="text"
+                        type="number"
                         name="amount"
                         id="amount"
                         value={formValues.amount}
                         onChange={handleInputChange}
                     />
+                </div>
+
+                <div className="form-group">
+                    <label htmlFor="quantity">Unit Measurement <span>* </span>
+                    </label>
+                    <select
+                        type="text"
+                        name="units"
+                        id="units"
+                        value={formValues.units}
+                        onChange={handleInputChange}
+                    >
+                        <option value="" hidden>Select Unit</option>
+                        {units.map((i) => (
+                            <option key={i.unitshort} value={i.unitshort}>
+                                {i.unitshort}
+                            </option>
+                        ))}
+                    </select>
                 </div>
                 <button type="button" 
                     onClick={
