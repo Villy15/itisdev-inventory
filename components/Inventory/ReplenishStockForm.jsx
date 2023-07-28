@@ -30,7 +30,7 @@ const ReplenishStockForm = ({user}) => {
 
     useEffect(() => {
         getInventory();
-    }, [showConfirmation]);
+    }, [inventory]);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -69,8 +69,8 @@ const ReplenishStockForm = ({user}) => {
             newDate: new Date().toLocaleString('en-US', { timeZone: 'Asia/Singapore' }),
             userId: user,
             inventoryId: inventory.find((i) => i.ingredientName === formValues.name).inventoryId,
-            quantity: confirmationData?.quantity,
-            unit: inventory.find((i) => i.ingredientName === formValues.name).unit,
+            quantity: formValues.quantity,
+            unit: formValues.units,
         };
 
         const updateInventoryQuantity = {
@@ -78,8 +78,7 @@ const ReplenishStockForm = ({user}) => {
             quantity: confirmationData?.quantity,
         };
 
-        console.log(newIncrease_Inventory);
-        console.log(updateInventoryQuantity);
+
         postIncreaseInventory(newIncrease_Inventory);
         patchInventory(updateInventoryQuantity);
 
@@ -102,6 +101,7 @@ const ReplenishStockForm = ({user}) => {
 
         if (!conversion) {
             console.log('Conversion not found!');
+            
             return quantity; // Return the original quantity if conversion not found
         }
 

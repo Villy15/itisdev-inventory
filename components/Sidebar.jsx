@@ -81,10 +81,6 @@ const stock_controller_sidebar_items = [
     href: '/inventory'
   },
   {
-    name: 'Add New Inventory',
-    href: '/inventory/addinventory'
-  },
-  {
     name: 'Record Purchase',
     href: '/inventory/replenishstock',
   }, 
@@ -126,16 +122,14 @@ const chef_sidebar_items = [
     href: '/menu'
   },
   {
-    name: 'View Inventory',
-    icon: <RxDashboard />,
-    href: '/inventory', 
-  },
-  {
     name: 'Add Food/Drink',
     icon: <RxArrowRight />,
     href: '/menu/adddish'
   },
-  
+  {
+    name: 'Add New Inventory',
+    href: '/inventory/addinventory'
+  },
 ];
 
 const Sidebar = ({role}) => {
