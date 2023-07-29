@@ -45,7 +45,6 @@ async function fetchAPI(url) {
     return data;
   }
   
-
 const AddDishForm = () => {
     const router = useRouter();
 
@@ -57,6 +56,7 @@ const AddDishForm = () => {
         description: '',
         image: '',
     });
+
     const [ingredients, setIngredients] = useState([]);
 
     const handleInputChange = (e) => {
@@ -91,15 +91,19 @@ const AddDishForm = () => {
     
         // Construct the new dish object
         const newDish = {
-          name: formValues.name,
-          price: parseFloat(formValues.price),
-          category: formValues.category,
-          description: formValues.description,
-          ingredients,
+            dishName: formValues.name,
+            dishPhoto: getFileNameFromPath(formValues.image),
+            category: formValues.category,
+            price: parseFloat(formValues.price),
+            enable: false,
+            enableDate: new Date().toLocaleString('en-US', { timeZone: 'Asia/Singapore' }),
+            description: formValues.description,
+            confirmed: false,
         };
-    
+
+        console.log(newDish);
         // Perform the necessary actions with the new dish data (e.g., save to API)
-        postDish(newDish);
+        // postDish(newDish);
     
         // Reset form values and ingredients
         setFormValues({
@@ -109,6 +113,7 @@ const AddDishForm = () => {
           description: '',
           image: '',
         });
+
         setIngredients([]);
       };
 
@@ -148,10 +153,10 @@ const AddDishForm = () => {
                     >
 
                         <option value="" hidden>Select Category</option>
-                        <option value="Manager">Appetizers</option>
-                        <option value="Stock Controller">Mains</option>
-                        <option value="Cashier">Beverages</option>                       
-                        <option value="Cashier">Desserts</option>                       
+                        <option value="Appetizers">Appetizers</option>
+                        <option value="Mains">Mains</option>
+                        <option value="Beverages">Beverages</option>                       
+                        <option value="Desserts">Desserts</option>                       
                     </select>
                 </div>
                 <div className="sub-group">
@@ -167,16 +172,17 @@ const AddDishForm = () => {
                             />
                     </div>
                     <div className="form-group">
-                        <label htmlFor="image">Input Image URL CHANGE TO DRAG PICTURE: </label>
+                        <label htmlFor="image">Upload your image here: </label>
                         <input
-                            type="text"
+                            type="file"
                             name="image"
                             id="image"
+                            accept="image/*"
                             className='description'
                             value={formValues.image}
                             onChange={handleInputChange}
                         />
-                    </div>  
+                    </div> 
                 </div>
                 {/* Add Table where you can input ingredients, quantity, and unit */}
                 <div className="ingredients-table">
@@ -238,5 +244,15 @@ const AddDishForm = () => {
         </div>
     )
 }
+
+function getFileNameFromPath(filePath) {
+    // Split the filePath by the backslash (\) or forward slash (/) to separate the path and filename
+    const pathSegments = filePath.split(/[\\\/]/);
+    // Get the last segment (filename) and split it by the dot (.) to separate the filename and extension
+    const filenameSegments = pathSegments.pop().split('.');
+    // Join all segments except the last one to get the filename without the extension
+    return filenameSegments.slice(0, -1).join('.');
+}
+
 
 export default AddDishForm

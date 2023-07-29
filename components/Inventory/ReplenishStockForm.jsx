@@ -228,6 +228,9 @@ const ReplenishStockForm = ({user}) => {
                                 </option>
                             ))}
                         </select>
+                        <button type="button" onClick={() => router.push(`/variants/addVariant?ingredientId=${selectedInventoryId}`)}> 
+                            Add New Variant
+                        </button>
                     </div>
                 )}
                 <div className="form-group">

@@ -87,6 +87,16 @@ table {
         // padding-left: 5%;
         // padding-right: 11%;
     }
+
+    .viewmore {
+        color: red;
+        text-decoration: none;
+
+        &:hover {
+            color: red;
+            text-decoration: underline;
+        }
+    }
 }
 
 .pagination {
@@ -96,6 +106,7 @@ table {
     gap: 1rem;
     margin-top: 1rem;
     list-style: none;
+    margin-bottom: 1.5rem;
   
     li {
       .active {
@@ -274,7 +285,7 @@ table {
         .link {
             text-decoration: none;
             color: black;
-            padding: 1rem;
+            padding: 0.5rem;
             display: flex;
             background-color: white;
             margin-bottom: 1rem;
@@ -358,6 +369,24 @@ table {
     }
 }
 
+.details {
+    display: flex;
+    flex-direction: column;
+    
+    .row {
+        display: flex;
+        flex-direction: row;
+        gap: 10rem;
+
+        margin-bottom: 1rem;
+        font-weight: 600;
+
+        span {
+            font-weight: 300;
+        }
+        
+    }
+}
 
 
 .add-inventory-form {
@@ -386,6 +415,8 @@ table {
 
     .form-group {
         width: 45%;
+
+      
     }
 }
 
@@ -394,6 +425,11 @@ table {
     display: flex;
     flex-direction: column;
     
+    button {
+
+        margin-top: 1rem;
+        width: 30%
+    }
 
     label {
         font-weight: bold;

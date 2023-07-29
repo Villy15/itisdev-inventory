@@ -7,68 +7,88 @@ import { useState, useEffect } from 'react';
 const manager_sidebar_items = [
   {
     name: 'Dashboard',
-    icon: <RxDashboard />,
     href: '/'
   },
   {
-    name: 'View Menu',
-    icon: <RxDashboard />,
-    href: '/menu'
+    name: 'Manager Users',
+    href: '/users'
+  },
+  {
+    name: 'View Reports',
+    href: '/reports',
+  },
+  {
+    name: 'View Increase Audit',
+    href: '/reports/increaseaudit'
+  },
+  {
+    name: 'View Expired Audit',
+    href: '/reports/expiredaudit'
+  },
+  {
+    name: 'View Missing Audit',
+    href: '/reports/missingaudit'
+  },
+  {
+    name: 'View Physical Count Report',
+    href: '/reports/physicalcount'
   },
   {
     name: 'View Inventory',
-    icon: <RxDashboard />,
     href: '/inventory', 
   },
   {
+    name: 'View Orders',
+    href: '/transactions'
+  },
+  {
+    name: 'View Order Items',
+    href: '/order-items'
+  },
+  {
+    name: 'View Menu',
+    href: '/menu'
+  },
+  {
+    name: 'View Variants',
+    href: '/variants',
+  },
+  {
+    name: 'Add New User',
+    href: '/users/addUser'
+  },
+  {
     name: 'Add Food/Drink',
-    icon: <RxArrowRight />,
     href: '/menu/adddish'
+  },
+  {
+    name: 'Add New Variants',
+    href: '/variants/addVariant',
   },
   {
     name: 'Record Purchase',
     href: '/inventory/replenishstock',
   }, 
   {
-    name: 'Manager Users',
-    icon: <RxDashboard />,
-    href: '/users'
+    name: 'Input Expired',
+    href: '/inventory/expired',
+  }, 
+  {
+    name: 'Input Physical Count',
+    href: '/inventory/physicalcount',
   },
   {
-    name: 'Add New User',
-    icon: <RxArrowRight />,
-    href: '/users/addUser'
+    name: 'Add Food/Drink',
+    href: '/menu/adddish'
   },
   {
-    name: 'View Reports',
-    icon: <RxDashboard />,
-    href: '/reports',
+    name: 'Add New Inventory',
+    href: '/inventory/addinventory'
   },
   {
-    name: 'View Increase Audit',
-    icon: <RxArrowRight />,
-    href: '/reports/increaseaudit'
-  },
-  {
-    name: 'View Expired Audit',
-    icon: <RxArrowRight />,
-    href: '/reports/expiredaudit'
-  },
-  {
-    name: 'View Missing Audit',
-    icon: <RxArrowRight />,
-    href: '/reports/missingaudit'
-  },
-  {
-    name: 'View Orders',
-    icon: <RxDashboard />,
-    href: '/transactions'
-  },
-  {
-    name: 'View Order Items',
-    icon: <RxDashboard />,
-    href: '/order-items'
-  },
+    name: 'POS Menu',
+    href: '/pos'
+  },  
 ];
 
 const stock_controller_sidebar_items = [
@@ -100,17 +120,16 @@ const stock_controller_sidebar_items = [
     name: 'Add New Variants',
     href: '/variants/addVariant',
   },
+  
 ];
 
 const cashier_sidebar_items = [
   {
     name: 'POS Menu',
-    icon: <RxDashboard />,
     href: '/pos'
   },  
   {
     name: 'Transactions',
-    icon: <RxDashboard />,
     href: '/transactions'
   },  
 ];
@@ -118,12 +137,10 @@ const cashier_sidebar_items = [
 const chef_sidebar_items = [
   {
     name: 'View Menu',
-    icon: <RxDashboard />,
     href: '/menu'
   },
   {
     name: 'Add Food/Drink',
-    icon: <RxArrowRight />,
     href: '/menu/adddish'
   },
   {

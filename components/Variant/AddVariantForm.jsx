@@ -5,6 +5,7 @@ import { fetchAPI, postAPI, patchAPI, deleteAPI } from '@api/*';
 
 const AddVariantForm = () => {
     const router = useRouter();
+    const { ingredientId } = router.query; 
 
     const [inventory, setInventory] = useState([]);
     const [formValues, setFormValues] = useState({
@@ -23,6 +24,25 @@ const AddVariantForm = () => {
         getAllVariants();
     }, []);
 
+
+    useEffect(() => {
+        // ... existing useEffect code ...
+    
+        // When the "ingredientId" changes, set the corresponding ingredient name in the form
+        if (ingredientId) {
+          const selectedIngredient = inventory.find(
+            (i) => i.inventoryId === parseInt(ingredientId)
+          );
+    
+          if (selectedIngredient) {
+            setFormValues((prevFormValues) => ({
+              ...prevFormValues,
+              name: selectedIngredient.ingredientName,
+            }));
+          }
+        }
+      }, [ingredientId, inventory]);
+      
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setFormValues({ ...formValues, [name]: value });
