@@ -13,20 +13,20 @@ const manager_sidebar_items = [
     name: 'Manager Users',
     href: '/users'
   },
+  // {
+  //   name: 'View Reports',
+  //   href: '/reports',
+  // },
   {
-    name: 'View Reports',
-    href: '/reports',
-  },
-  {
-    name: 'View Increase Audit',
+    name: 'View Increase Report',
     href: '/reports/increaseaudit'
   },
   {
-    name: 'View Expired Audit',
+    name: 'View Expired Report',
     href: '/reports/expiredaudit'
   },
   {
-    name: 'View Missing Audit',
+    name: 'View Missing Report',
     href: '/reports/missingaudit'
   },
   {
@@ -57,38 +57,38 @@ const manager_sidebar_items = [
     name: 'Add New User',
     href: '/users/addUser'
   },
-  {
-    name: 'Add Food/Drink',
-    href: '/menu/adddish'
-  },
-  {
-    name: 'Add New Variants',
-    href: '/variants/addVariant',
-  },
-  {
-    name: 'Record Purchase',
-    href: '/inventory/replenishstock',
-  }, 
-  {
-    name: 'Input Expired',
-    href: '/inventory/expired',
-  }, 
-  {
-    name: 'Input Physical Count',
-    href: '/inventory/physicalcount',
-  },
-  {
-    name: 'Add Food/Drink',
-    href: '/menu/adddish'
-  },
-  {
-    name: 'Add New Ingredient',
-    href: '/inventory/addinventory'
-  },
-  {
-    name: 'POS Menu',
-    href: '/pos'
-  },  
+  // {
+  //   name: 'Add Food/Drink',
+  //   href: '/menu/adddish'
+  // },
+  // {
+  //   name: 'Add New Variants',
+  //   href: '/variants/addVariant',
+  // },
+  // {
+  //   name: 'Record Purchase',
+  //   href: '/inventory/replenishstock',
+  // }, 
+  // {
+  //   name: 'Input Expired',
+  //   href: '/inventory/expired',
+  // }, 
+  // {
+  //   name: 'Input Physical Count',
+  //   href: '/inventory/physicalcount',
+  // },
+  // {
+  //   name: 'Add Food/Drink',
+  //   href: '/menu/adddish'
+  // },
+  // {
+  //   name: 'Add New Ingredient',
+  //   href: '/inventory/addinventory'
+  // },
+  // {
+  //   name: 'POS Menu',
+  //   href: '/pos'
+  // },  
 ];
 
 const stock_controller_sidebar_items = [

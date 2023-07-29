@@ -14,7 +14,8 @@ async function getExpired(req, res) {
                 newDate, 
                 userId,
                 users (id, lastname)
-            `);
+            `)
+            .order('newDate', { ascending: false });
 
         if (error) {
             throw error;

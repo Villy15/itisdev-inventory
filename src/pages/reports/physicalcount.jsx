@@ -80,13 +80,14 @@ const Reports = ({
       <div className="main-section">
         <Header page={"View Physical Count"} user={user} />
         <div className="reports">
-          <input
+          {/* <input
             type="text"
             placeholder="Search Employee Name"
             className="search"
             value={searchQuery}
             onChange={handleSearch}
-          />
+          /> */}
+          <h1 className="margin-bottom">Physical Count Summary Report</h1>
             <table>
                 <thead>
                     <tr>

@@ -92,8 +92,9 @@ const AddDishForm = () => {
                 unit: ingredient.unit,
             };
             console.log(newRecipe);
-            await postRecipe(newRecipe);
             recipeId++;
+
+            await postRecipe(newRecipe);
         });
 
         setFormValues({

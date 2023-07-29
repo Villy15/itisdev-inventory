@@ -21,7 +21,9 @@ async function getDishRecipe(req, res) {
             throw error;
             
         }
+        
 
+        console.log("recipes", recipes);
         res.send(recipes);
     } catch (error) {
         res.statusCode = 500;

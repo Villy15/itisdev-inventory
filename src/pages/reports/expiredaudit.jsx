@@ -1,6 +1,8 @@
 import Header from "@components/Header";
 import Sidebar from "@components/Sidebar";
 import Table from "@components/Table";
+import { fetchAPI, postAPI, patchAPI, deleteAPI } from '@api/*';
+import Link from "next/link";
 
 import { withSessionSsr } from "@lib/withSession";
 import { useState, useEffect } from "react";
@@ -26,54 +28,99 @@ export const getServerSideProps = withSessionSsr(
 const Reports = ({
   user
 }) => {
-  const [expired, setExpired] = useState([]); 
+  const [originalIncreased, setOriginalIncreased] = useState([]); 
+  const [increased, setIncreased] = useState([]);
+  const [filteredIncreased, setFilteredIncreased] = useState([]); 
+  const [conversions, setConversion] = useState([]);
 
   // Pages
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [searchQuery, setSearchQuery] = useState('');
 
+  const [inventorylist, setInventory] = useState([]);
+
   useEffect(() => {
-    fetchExpired();
+    getCoversion();
+    getInventory();
   }, []);
 
-  async function fetchExpired() {
-    try {
-      const response = await fetch('/api/reports/getExpired', {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+  useEffect(() => {
 
-      if (!response.ok) {
-        throw new Error('Request failed with status ' + response.status);
+    async function getIncreased() {
+      try {
+        const data = await fetchAPI("/api/reports/getExpired");
+        setIncreased(data);
+        setOriginalIncreased(data);
+    
+        // Get total of each ingredient by date
+        const aggregatedData = {};
+    
+        for (const item of data) {
+          const { inventory, newDate, quantity, unit} = item;
+          const date = newDate.split("T")[0]; // Split and keep only the date part
+          const key = `${inventory.ingredientName}_${date}`;
+          
+          
+          const inventoryId = inventory.inventoryId;
+          const inventoryUnit = inventorylist.find((i) => i.inventoryId == inventoryId).unit;
+        
+          const convertedQuantity = convertUnits(unit, inventoryUnit, quantity);
+
+          // console.log("Unit: " + unit);
+          // console.log("Inventory Unit: " + inventoryUnit);
+          // console.log("Quantity: " + quantity);
+          // console.log("Converted Quantity: " + convertedQuantity);
+    
+          if (!aggregatedData[key]) {
+
+            aggregatedData[key] = {
+              ingredientName: inventory.ingredientName,
+              date: date,
+              quantity: convertedQuantity,
+              unit: inventoryUnit,
+              inventoryId: inventoryId,
+            };
+          } else {
+            aggregatedData[key].quantity += convertedQuantity;
+          }
+        }
+    
+        const filteredData = Object.values(aggregatedData);
+        setFilteredIncreased(filteredData);
+      } catch (err) {
+        console.error(err);
       }
-
-      const data = await response.json();
-      setExpired(data);
-    } catch (err) {
-      console.error(err);
     }
-  }
 
+    getIncreased();
+
+    const convertUnits = (fromUnit, toUnit, quantity) => {
+      console.log(fromUnit, toUnit, quantity);
+      const conversion = conversions.find(
+        (conversion) => conversion.from_unit === fromUnit && conversion.to_unit === toUnit
+      );
+  
+      if (!conversion) {
+        console.log('Conversion not found!');
+        return quantity; // Return the original quantity if conversion not found
+      }
+  
+      return quantity * conversion.to_quantity;
+    };
+    
+  }, [inventorylist, conversions]);
+
+  useEffect(() => {
+    console.log(increased);
+  }, [increased]);
+  
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = expired.slice(indexOfFirstItem, indexOfLastItem);
+  const currentItems = filteredIncreased.slice(indexOfFirstItem, indexOfLastItem);
 
   const paginate = (pageNumber) => {
     setCurrentPage(pageNumber);
-  };
-
-
-  const tableProps = {
-    columns: [
-      { label: 'Item name', key: 'inventory.ingredientName' },
-      { label: 'Quantity', key: 'quantity' },
-      { label: 'Unit of Measurement', key: 'unit' },
-      { label: 'Date Submitted', key: 'newDate' },
-      { label: 'Submitted by', key: 'users.lastname' },
-    ],
   };
 
   const handleSearch = (event) => {
@@ -86,32 +133,90 @@ const Reports = ({
     }
   };
 
-  
+  async function getCoversion() {
+    try {
+      const data = await fetchAPI("/api/conversion_table/getConversions");
+      setConversion(data);
+    } catch (err) {
+      console.error(err);
+    }
+  }
 
+  const convertUnits = (fromUnit, toUnit, quantity) => {
+    const conversion = conversions.find(
+      (conversion) => conversion.from_unit == fromUnit && conversion.to_unit == toUnit
+    );
+
+    if (!conversion) {
+      console.log('Conversion not found!');
+
+      return quantity; // Return the original quantity if conversion not found
+    }
+
+    return quantity * conversion.to_quantity;
+  };
+
+  async function getInventory() {
+    try {
+      const data = await fetchAPI("/api/inventory/getInventoryWithId");
+      setInventory(data);
+    } catch (err) {
+      console.error(err);
+    }
+  }
 
   return (
     <main>
       <Sidebar role={user.role} />
       <div className="main-section">
-        <Header page={"Reports"} user={user} />
+        <Header page={"Expired Report"} user={user} />
         <div className="reports">
-          <h1>Expired Audit</h1>
-          <input
+          <h1 className="margin-bottom">Expired Summary Report</h1>
+          {/* <input
             type="text"
             placeholder="Search ItemName"
             className="search"
             value={searchQuery}
             onChange={handleSearch}
-          />
-          <Table 
-              data={expired}
-            columns={tableProps.columns}
-            currentPage={1}
-            itemsPerPage={10}
-          />
+          /> */}
+          <table>
+            <thead>
+              <tr>
+                <th>Ingredient Name</th>
+                <th>Date</th>
+                <th>Total Quantity</th>
+                <th>Unit</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {currentItems.map((i, index) => (
+                <tr key={index}>
+                  <td className="row-left">
+                    {i.ingredientName}
+                  </td>
+                  <td>
+                    {/* format date of  2023-07-28T14:06:58+00:00 to YYYY-MM-DD*/}
+                    {i.date}
+                  </td>
+                  <td className="row-right">
+                    {i.quantity}
+                  </td>
+                  <td className="row-left">
+                    {i.unit}
+                  </td>
+                  <td>
+                    <Link href={`/reports/expiredaudit/${i.inventoryId}`} className="viewmore">
+                      View More
+                    </Link>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
           <Pagination
             itemsPerPage={itemsPerPage}
-            totalItems={expired.length}
+            totalItems={filteredIncreased.length}
             currentPage={currentPage}
             paginate={paginate}
           />
@@ -120,6 +225,7 @@ const Reports = ({
     </main>
   )
 }
+
 
 const Pagination = ({ itemsPerPage, totalItems, currentPage, paginate }) => {
   const pageNumbers = [];

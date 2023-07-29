@@ -93,6 +93,14 @@ table {
         // padding-right: 11%;
     }
 
+    input {
+        padding: 0.5rem;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+        font-size: 1rem;
+        text-align: right;
+    }
+
     .viewmore {
         color: red;
         text-decoration: none;
@@ -419,6 +427,23 @@ table {
     .search {
         width: 30%;
     }
+}
+
+.report-header {
+    font-size: x-large;
+    font-weight: 600;
+}
+
+.margin-bottom {
+    margin-bottom: 1.5rem;
+}
+
+.date-filter {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin-bottom: 1rem;
+    gap: 1rem;
 }
 
 .details {

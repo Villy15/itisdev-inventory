@@ -8,8 +8,9 @@ const InputPhysicalForm = ({ user }) => {
 
     const [inventory, setInventory] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
+    
     const itemsPerPage = 10;
-
+    
     const [physicalCount, setPhysicalCount] = useState([]);
     const [currentInventory, setCurrentInventory] = useState([]);
 
@@ -155,10 +156,10 @@ const InputPhysicalForm = ({ user }) => {
                     <tbody>
                         {currentItems.map((inventory, index) => (
                             <tr key={index}>
-                                <td>
+                                <td className='row-left'>
                                     {inventory.ingredientName}
                                 </td>
-                                <td>
+                                <td className='row-left'>
                                     {inventory.unit}
                                 </td>
                                 <td>

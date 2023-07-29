@@ -6,7 +6,7 @@ export default withSessionRoute(getExpired);
 async function getExpired(req, res) {
     try {
         let { data: reports, error } = await supabase
-            .from('increase_inventory')
+            .from('missing_inventory')
             .select(`
                 inventory (inventoryId, ingredientName), 
                 quantity, 

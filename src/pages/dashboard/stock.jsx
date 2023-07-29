@@ -48,6 +48,7 @@ const Inventory = ({ user }) => {
     useEffect(() => {
         getInventory();
     }, []);
+    
 
     async function getInventory() {
         try {

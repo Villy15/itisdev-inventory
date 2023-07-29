@@ -5,8 +5,10 @@ export default withSessionRoute(getExpired);
 
 async function getExpired(req, res) {
     try {
+        const { inventoryId } = req.query;
+
         let { data: reports, error } = await supabase
-            .from('increase_inventory')
+            .from('missing_inventory')
             .select(`
                 inventory (inventoryId, ingredientName), 
                 quantity, 
@@ -15,7 +17,8 @@ async function getExpired(req, res) {
                 userId,
                 users (id, lastname)
             `)
-            .order('newDate', { ascending: false });
+            .order('newDate', { ascending: false })
+            .eq('inventoryId', inventoryId);
 
         if (error) {
             throw error;

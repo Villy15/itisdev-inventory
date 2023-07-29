@@ -52,7 +52,7 @@ export default function Dish({ user }) {
       }
     }
   
-  
+
     async function getRecipe() {
         try {
             const response = await fetch(`/api/recipe/getDishRecipe?dishId=${dishId}`, {
@@ -80,6 +80,10 @@ export default function Dish({ user }) {
       getRecipe();
     }
   }, [user, router, dishId]);
+
+  useEffect(() => {
+    console.log(recipes);
+  }, [recipes]);
   
       
   const tableProps = {

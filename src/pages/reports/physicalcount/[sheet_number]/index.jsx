@@ -89,11 +89,11 @@ const Reports = ({
         <div className="reports">
         <div className="details">
             <div className="row">
-              <div>Sheet No: <span>{physicalCountList.length > 0 ? physicalCountList[0].sheet_number : ''}</span></div>
-              <div>Date: <span>{physicalCountList.length > 0 ? physicalCountList[0].physical_count.updateDate : ''}</span></div>
+              <div className="report-header">Sheet No: <span>{physicalCountList.length > 0 ? physicalCountList[0].sheet_number : ''}</span></div>
+              <div className="report-header">Date: <span>{physicalCountList.length > 0 ? physicalCountList[0].physical_count.updateDate : ''}</span></div>
             </div>
             <div className="row">
-              <div>Prepared By: <span>{users.length > 0 ? users[0].lastname : ''}, {users.length > 0 ? users[0].firstname : ''}</span></div>
+              <div className="report-header">Prepared By: <span>{users.length > 0 ? users[0].lastname : ''}, {users.length > 0 ? users[0].firstname : ''}</span></div>
             </div>
         </div>
           <table>
@@ -126,6 +126,8 @@ const Reports = ({
             currentPage={currentPage}
             paginate={paginate}
           />
+          <h1>END OF REPORT</h1>
+
         </div>
       </div>
     </main>
