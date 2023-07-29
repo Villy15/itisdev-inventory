@@ -586,29 +586,36 @@ table {
         
     }
 
+    .cancel,
+    .deduct-quantity,
+    .add-quantity {
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        border: none;
+        background-color: #ccc;
+        color: black;
+        font-size: 1rem;
+        cursor: pointer;
+        margin-right: 1rem;
+        width: 100px;
+
+        // hover
+        &:hover {
+            background-color: #f3f1f1;
+        }
+    }
+    .deduct-quantity,
+    .add-quantity {
+        width: 50px;
+    }
+
     .checkout {
         padding: 1rem;
         display: flex;
         justify-content: space-between;
 
         
-        // .cancel and .proceed buttons
-        .cancel {
-            padding: 0.5rem 1rem;
-            border-radius: 4px;
-            border: none;
-            background-color: #ccc;
-            color: black;
-            font-size: 1rem;
-            cursor: pointer;
-            margin-right: 1rem;
-
-            // hover
-            &:hover {
-                background-color: #f3f1f1;
-            }
-        }
-
+        // .proceed buttons
         .proceed {
             padding: 0.5rem 1rem;
             border-radius: 4px;

@@ -233,6 +233,34 @@ export default function POS({ user }) {
     setOrders([]);
   };
 
+  const removeItem = (dishId) => {
+    const updatedOrders = orders.filter((order) => order.dishId !== dishId);
+    setOrders(updatedOrders);
+  };
+
+  const handleDeductQuantity = (dishId) => {
+    const existingOrder = orders.find((order) => order.dishId === dishId);
+
+    if (existingOrder) {
+      const updatedOrders = orders.map((order) =>
+        order.dishId === dishId
+          ? { ...order, dishQuantity: Math.max(0, order.dishQuantity - 1) } // Ensure dishQuantity is at least 0
+          : order
+      );
+
+      const filteredOrders = updatedOrders.filter((order) => order.dishQuantity > 0);
+
+      setOrders(filteredOrders);
+    }
+  };
+
+  const handleAddQuantity = (dishId) => {
+    const updatedOrders = orders.map((order) =>
+      order.dishId === dishId ? { ...order, dishQuantity: order.dishQuantity + 1 } : order
+    );
+    setOrders(updatedOrders);
+  };
+
   useEffect(() => {
     getOrders();
   }, [dataOrders]);
@@ -386,10 +414,15 @@ export default function POS({ user }) {
                   <div className="price">Price</div>
                 </div>
                 {orders.map((order) => (
-                  <div key={order.dishId} className="order-item">
+                  <div key={order.dishId} className="order-item" id = 'orderItem'> 
                     <div className="order-name">{order.dishName}</div>
-                    <div className="order-quantity">{order.dishQuantity}</div>
+                    <div className="order-quantity"> 
+                      <button className="deduct-quantity" onClick={() => handleDeductQuantity(order.dishId)}> - </button> 
+                        {order.dishQuantity}  
+                      <button className="add-quantity" onClick={() => handleAddQuantity(order.dishId)}> + </button>
+                    </div>
                     <div className="order-price">{order.dishPrice}</div>
+                    <button className="cancel" onClick={() => removeItem(order.dishId)}> Remove </button>
                   </div>
                 ))}
                 <div className="footers">
@@ -398,8 +431,7 @@ export default function POS({ user }) {
                 </div>
               </div>
               <div className="checkout">
-                <button className="cancel">Cancel</button>
-                <button className="checkout" onClick={handleCheckout}>
+                <button className="checkout" onClick={handleCheckout}> 
                   Checkout
                 </button>
               </div>
