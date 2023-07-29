@@ -41,6 +41,7 @@ button {
     }
 }
 
+
 table {
     width: 100%;
     border-collapse: collapse;
@@ -74,6 +75,10 @@ table {
     .row-number {
         width: 5%;
         // margin-right: 5rem;
+    }
+
+    .smaller-width {
+        width: 5%;
     }
 
     .row-left {
@@ -145,6 +150,49 @@ table {
         display : flex;
         flex-direction: column;
         gap: 1rem;
+    }
+}
+
+.smaller-width {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.circle {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+  }
+  
+  .low-stock {
+    background-color: orange;
+  }
+  
+  .out-of-stock {
+    background-color: red;
+  }
+
+.dashboard-stock {
+    .row {
+        display: flex;
+        flex-direction: row;
+        gap: 1rem;
+        justify-content: center;
+        padding: 2rem;
+
+        .card {
+            width: 20rem;
+            padding: 1rem;
+            border-radius: 4px;
+            background-color: $lightblue;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            display: flex;
+            color : white;
+            justify-content: center;
+            flex-direction: column;
+        }
     }
 }
 
@@ -345,6 +393,10 @@ table {
         display: flex;
         justify-content: space-between;
     }
+
+    h1 {
+        margin-bottom: .5rem;
+    }
 }
 
 .margin-b {
@@ -420,6 +472,19 @@ table {
     }
 }
 
+select {
+    padding: 0.5rem;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    background-color: white;
+    
+    font-size: 1rem;
+}
+
+.functions-filter {
+    font-weight: 600;
+}
+
 .form-group {
     margin-bottom: 1rem;
     display: flex;
@@ -428,7 +493,7 @@ table {
     button {
 
         margin-top: 1rem;
-        width: 30%
+        width: 10rem;
     }
 
     label {
@@ -586,6 +651,10 @@ table {
         
     }
 
+    .add-quantity {
+        margin-left: 1rem;
+    }
+
     .cancel,
     .deduct-quantity,
     .add-quantity {
@@ -652,6 +721,10 @@ table {
             // darker off white
             background-color: #f3f1f1;
         }
+    }
+
+    .no-quantity {
+        background-color: rgba(128, 128, 128, 0.692);
     }
 }
 

@@ -1,17 +1,23 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
+import { fetchAPI, postAPI, patchAPI, deleteAPI } from '@api/*';
+
 
 const AddInventoryForm = () => {
     const router = useRouter();
     const [inventory, setInventory] = useState([]);
+    const [units, setUnits] = useState([]); 
+    const [conversions, setConversions] = useState([]);
+     
     const [formValues, setFormValues] = useState({
         name: '',
-        quantity: '',
-        description: '',
+        unit: '',
     });
 
     useEffect(() => {
         getInventory();
+        getUnits();
+        getConversions();
     }, []);
 
 
@@ -23,27 +29,26 @@ const AddInventoryForm = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        if (!formValues.name || !formValues.quantity || !formValues.unit) {
-            alert('Please fill out all fields');
-            return;
-        }
+        // if (!formValues.name ||  !formValues.unit) {
+        //     alert('Please fill out all fields');
+        //     return;
+        // }
 
         const newInventory = { 
             inventoryId: Math.max.apply(Math, inventory.map(function(i) { return i.inventoryId; })) + 1,
             ingredientName: formValues.name,
-            quantity: parseFloat(formValues.quantity),
             unit: formValues.unit,
             updateDate: new Date().toLocaleString('en-US', { timeZone: 'Asia/Singapore' }),
             enable: true,
             enableDate: new Date().toLocaleString('en-US', { timeZone: 'Asia/Singapore' }),
-            // description: formValues.description,
          };
+
+         console.log(newInventory);
 
         postInventory(newInventory);
 
         setFormValues({
             name: '',
-            quantity: '',
             unit: '',
         });
     };
@@ -54,6 +59,7 @@ const AddInventoryForm = () => {
                 method: 'POST',
                 body: JSON.stringify(newInventory),
                 headers: {
+
                     'Content-Type': 'application/json',
                 }
             });
@@ -64,7 +70,6 @@ const AddInventoryForm = () => {
 
             const data = await response.json();
             console.log(data);
-            router.push('/inventory');
         } catch (error) {
             console.error(error);
         }
@@ -72,19 +77,26 @@ const AddInventoryForm = () => {
 
     async function getInventory() {
         try {
-            const response = await fetch('/api/inventory/getInventory', {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            });
-
-            if (!response.ok) {
-                throw new Error('Request failed with status ' + response.status);
-            }
-
-            const data = await response.json();
+            const data = await fetchAPI("/api/inventory/getInventoryWithId");
             setInventory(data);
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
+    async function getUnits() {
+        try {
+            const data = await fetchAPI("/api/units_table/getUnits");
+            setUnits(data);
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
+    async function getConversions() {
+        try {
+            const data = await fetchAPI("/api/conversion_table/getConversions");
+            setConversions(data);
         } catch (err) {
             console.error(err);
         }
@@ -104,31 +116,24 @@ const AddInventoryForm = () => {
                     />
                 </div>
                 <div className="form-group">
-                    <label htmlFor="quantity">Quantity <span>* </span></label>
-                    <input
-                        type="text"
-                        name="quantity"
-                        id="quantity"
-                        value={formValues.quantity}
-                        onChange={handleInputChange}
-                    />
-                </div>
-                <div className="form-group">
-                    <label htmlFor="unit">Unit <span>* </span></label>
+                    <label htmlFor="quantity">Unit Measurement <span>* </span>
+                    </label>
                     <select
-                        type="number"
+                        type="text"
                         name="unit"
                         id="unit"
                         value={formValues.unit}
                         onChange={handleInputChange}
                     >
                         <option value="" hidden>Select Unit</option>
-                        <option value="pcs">pcs</option>
-                        <option value="kg">kg</option>
-                        <option value="liters">liters</option>
+                        {units.map((i) => (
+                            <option key={i.unitshort} value={i.unitshort}>
+                                {i.unitshort}
+                            </option>
+                        ))}
                     </select>
                 </div>
-                <button type="button" 
+                <button type="button"
                     onClick={
                         () => router.push('/inventory')
                     }> Cancel</button>

@@ -4,6 +4,7 @@ import { fetchAPI, postAPI, patchAPI, deleteAPI } from '@api/*';
 
 const ReplenishStockForm = ({user}) => {
     const router = useRouter();
+    const { inventoryId } = router.query;
 
     const [inventory, setInventory] = useState([]);
     const [variant, setVariant] = useState([]); 
@@ -32,6 +33,21 @@ const ReplenishStockForm = ({user}) => {
         getInventory();
     }, [inventory]);
 
+    useEffect(() => {
+        if (inventoryId) {
+            const selectedIngredient = inventory.find(
+                (i) => i.inventoryId === parseInt(inventoryId)
+            );
+
+            if (selectedIngredient) {
+                setFormValues((prevFormValues) => ({
+                    ...prevFormValues,
+                    name: selectedIngredient.ingredientName,
+                }));
+            }
+        }
+    }, [inventoryId, inventory]);
+
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         const inventoryId = inventory.find((i) => i.ingredientName === value)?.inventoryId;
@@ -49,7 +65,18 @@ const ReplenishStockForm = ({user}) => {
 
         // Calculate current and after quantities
         const selectedInventory = inventory.find((i) => i.ingredientName == formValues.name);
-        const convertedQuantity = formValues.units ? convertUnits(formValues.units, selectedInventory.unit, formValues.quantity) : formValues.quantity;
+        let convertedQuantity = 0;
+
+        if (formValues.variant) {
+            const selectedVariant = variant.find((i) => i.variationName == formValues.variant);
+            // Get the conversion rate of the selectedVariant
+            convertedQuantity = convertUnits(selectedVariant.unit, selectedInventory.unit, selectedVariant.amount);
+            convertedQuantity = convertedQuantity * formValues.quantity;
+        } else {
+            convertedQuantity = formValues.units ? convertUnits(formValues.units, selectedInventory.unit, formValues.quantity) : formValues.quantity;
+        }
+
+
         const newQuantity = parseFloat(selectedInventory.quantity) + parseFloat(convertedQuantity);
         
 
@@ -148,7 +175,7 @@ const ReplenishStockForm = ({user}) => {
             console.error(err);
         }
     }
-;
+
 
     useEffect(() => {
         async function getVariant() {

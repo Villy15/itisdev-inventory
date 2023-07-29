@@ -25,48 +25,22 @@ export const getServerSideProps = withSessionSsr(
 
 export default function Home({ user }) {
   const router = useRouter();
-  const [inventory, setInventory] = useState([]);
 
   useEffect(() => {
     if (user.role === "Guest") {
       router.push("/login");
     } else if (user.role === "Cashier") {
       router.push("/pos");
+    } else if (user.role === "Manager") {
+      router.push("/dashboard/manager");
+    
+    } else if (user.role === "Chef") {
+      router.push("/menu");
+      
+    } else if (user.role === "Stock Controller") {
+      router.push("/dashboard/stock");
     }
   }, [user, router]);
-
-  useEffect(() => {
-    getInventory();
-  }, []);
-
-  async function getInventory() {
-    try {
-      const response = await fetch('/api/inventory/getInventory', {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error('Request failed with status ' + response.status);
-      }
-
-      const data = await response.json();
-
-      const ingredients = data
-        .filter(({ quantity, minquantity }) => quantity < minquantity)
-        .map(({ ingredientName, quantity, minquantity }) => ({
-          ingredientName,
-          quantity,
-          minquantity,
-        }));
-
-      setInventory(ingredients);       
-    } catch (err) {
-      console.error(err);
-    }
-  }
 
 
   return (
@@ -76,10 +50,8 @@ export default function Home({ user }) {
         <div className="main-section">
           <Header page={"Dashboard"} user={user} />
           <div className="dashboard">
-            <div className="lowcount">
-              <h1>Low Count Ingredients</h1>
-              <Table data={inventory} />
-            </div>
+
+
           </div>
         </div>
       </main>

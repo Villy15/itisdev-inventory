@@ -24,10 +24,11 @@ export const getServerSideProps = withSessionSsr(async function getServerSidePro
 });
 
 const Inventory = ({ user }) => {
-  const [originalInventory, setOriginalInventory] = useState([]);
   const [inventory, setInventory] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
+
+  const [originalInventory, setOriginalInventory] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
@@ -48,6 +49,9 @@ const Inventory = ({ user }) => {
       }
 
       const data = await response.json();
+      // sort the inventory by ingredient name
+      data.sort((a, b) => a.inventory.ingredientName.localeCompare(b.inventory.ingredientName));
+
       setOriginalInventory(data);
       setInventory(data);
     } catch (err) {
@@ -55,13 +59,14 @@ const Inventory = ({ user }) => {
     }
   }
 
-  // useEffect(() => {
-  //   const filteredInventory = originalInventory.filter((item) =>
-  //     item.ingredientName.toLowerCase().includes(searchQuery.toLowerCase())
-  //   );
-  //   setCurrentPage(1);
-  //   setInventory(filteredInventory);
-  // }, [searchQuery, originalInventory]);
+  useEffect(() => {
+    const filteredInventory = originalInventory.filter((item) =>
+      item.inventory.ingredientName.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+    setCurrentPage(1);
+    setInventory(filteredInventory);
+  }, [searchQuery, originalInventory]);
+
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -100,7 +105,7 @@ const Inventory = ({ user }) => {
             <div>
               <input
                 type="text"
-                placeholder="Search Name"
+                placeholder="Search Ingredient Name"
                 className="search"
                 value={searchQuery}
                 onChange={handleSearch}

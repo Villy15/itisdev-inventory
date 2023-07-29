@@ -1,19 +1,21 @@
 import { withSessionRoute } from "@lib/withSession";
 import supabase from "@supabase";
 
-export default withSessionRoute(getVariants);
+export default withSessionRoute(getLowStock);
 
-async function getVariants(req, res) {
+async function getLowStock(req, res) {
     try {
         let { data: ingredients, error } = await supabase
-            .from('variation')
+            .from('inventory')
             .select(`
-                inventory (inventoryId, ingredientName), 
-                variationName,
-                amount,
-                unit
+                inventoryId,
+                ingredientName,
+                quantity,
+                unit,
+                minquantity
             `)
-            .order('inventoryId', { ascending: true });
+            // .filter('quantity', 'lt', 'minquantity')
+            .order('ingredientName', { ascending: true });
 
         if (error) {
             throw error;

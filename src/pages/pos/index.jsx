@@ -75,8 +75,10 @@ export default function POS({ user }) {
   const [appliedFilter, setAppliedFilter] = useState("");
   const [recipes, setRecipes] = useState([]);
   const [inventory, setInventory] = useState([]);
-  const [dryConversion, setDryConversion] = useState([]);
-  const [wetConversion, setWetConversion] = useState([]);
+  const [conversion, setConversion] = useState([]);
+
+  const [showConfirmation, setShowConfirmation] = useState(false);
+  const [confirmationData, setConfirmationData] = useState(null);
 
   useEffect(() => {
     if (user.role === "Guest") {
@@ -91,8 +93,7 @@ export default function POS({ user }) {
     getOrderItems();
     getRecipes();
     getInventory();
-    getDryConversion();
-    getWetConversion();
+    getConversions();
   }, []);
 
   const handleOnclick = (dishId) => {
@@ -137,15 +138,26 @@ export default function POS({ user }) {
 
 
   const handleCheckout = async () => {
+    setConfirmationData({
+      title: "Checkout",
+      message: "Are you sure you want to checkout?",
+    });
+
+    // Show the confirmation popup
+    setShowConfirmation(true)
+  };
+
+   const handleConfirmationSubmit = async () => {
+    
     const newOrder = {
       orderId: Math.max(...dataOrders.map((i) => i.orderId)) + 1,
       totalPrice,
-      tableNumber: 1,
       orderDate: new Date().toLocaleString("en-US", { timeZone: "Asia/Singapore" }),
       userId: user.id,
     };
 
     await postOrder(newOrder);
+    console.log(newOrder);
 
     const orderItemId = Math.max(...orderItems.map((i) => i.order_itemId)) + 1;
 
@@ -158,6 +170,7 @@ export default function POS({ user }) {
       };
 
       postOrderItem(newOrderItem);
+      console.log(newOrderItem);
 
       let recipe = [];
 
@@ -174,44 +187,16 @@ export default function POS({ user }) {
 
         inventory.forEach((inventoryItem) => {
           if (inventoryItem.inventoryId === recipeItem.ingredientId) {
-
-            console.log("Inventory Item ID: " + inventoryItem.inventoryId);
-            console.log("Ingredient Name: " + inventoryItem.ingredientName);
-            console.log("Inventory Item Quantity: " + inventoryItem.quantity);
-            console.log("Inventory unit: " + inventoryItem.unit);
-
-            console.log("Recipe Item Quantity: " + recipeItem.quantity);
-            console.log("Recipe unit: " + recipeItem.unit);
-
-            console.log("Order Quantity: " + order.dishQuantity);
-
             let convertedRecipeQuantity = recipeItem.quantity;
 
-            if (recipeItem.unit == "ml" ) {
-              wetConversion.forEach((wetConversionItem) => {
-                if (wetConversionItem.from_unit == recipeItem.unit && wetConversionItem.to_unit == inventoryItem.unit) {
-                  convertedRecipeQuantity *= wetConversionItem.to_quantity;
-                  console.log("Wet Conversion: " + wetConversionItem.to_quantity);
-                  console.log("Wet Conversion Unit: " + wetConversionItem.to_unit);
-                  // End loop
-                  return;
-                }
-              });
-            }          
-            
-            if (recipeItem.unit == "g" || recipeItem.unit == "scoop") {
-              dryConversion.forEach((dryConversionItem) => {
-                if (dryConversionItem.from_unit == recipeItem.unit && dryConversionItem.to_unit == inventoryItem.unit) {
-                  convertedRecipeQuantity *= dryConversionItem.to_quantity;
-                  console.log("Dry Conversion: " + dryConversionItem.to_quantity);
-                  console.log("Dry Conversion Unit: " + dryConversionItem.to_unit);                  
-                  // End loop
-                  return;
-                }
-              });
-            }
-            
-            
+            conversion.forEach((conversion) => {
+              if (conversion.from_unit == recipeItem.unit && conversion.to_unit == inventoryItem.unit) {
+                convertedRecipeQuantity *= conversion.to_quantity;
+                // End loop
+                return;
+              }
+            });
+                        
             console.log("Converted Recipe Quantity: " + convertedRecipeQuantity);
             newInventory = {
               inventoryId: recipeItem.ingredientId,
@@ -231,7 +216,19 @@ export default function POS({ user }) {
 
     // Clear orders
     setOrders([]);
-  };
+    
+    // Hide the confirmation popup
+    setShowConfirmation(false);
+};
+
+const handleCancelOrder = () => {
+  // Clear the form values
+  setOrders([]);
+
+  // Hide the confirmation popup
+  setShowConfirmation(false);
+};
+
 
   const removeItem = (dishId) => {
     const updatedOrders = orders.filter((order) => order.dishId !== dishId);
@@ -320,7 +317,7 @@ export default function POS({ user }) {
 
   async function getInventory() {
     try {
-      const data = await fetchAPI("/api/inventory/getInventory");
+      const data = await fetchAPI("/api/inventory/getInventoryWithId");
       setInventory(data);
     } catch (err) {
       console.error(err);
@@ -336,20 +333,10 @@ export default function POS({ user }) {
     }
   }
   
-  async function getDryConversion() {
+  async function getConversions () {
     try {
-      const data = await fetchAPI("/api/dry_conversion/getDryConversion");
-      setDryConversion(data);
-    } catch (err) {
-      console.error(err);
-    }
-  }
-
-
-  async function getWetConversion() {
-    try {
-      const data = await fetchAPI("/api/wet_conversion/getWetConversion");
-      setWetConversion(data);
+      const data = await fetchAPI("/api/conversion_table/getConversions");
+      setConversion(data);
     } catch (err) {
       console.error(err);
     }
@@ -435,6 +422,14 @@ export default function POS({ user }) {
                   Checkout
                 </button>
               </div>
+              {showConfirmation && (
+                    <div className='confirmation-popup'>
+                        <p>{confirmationData?.title}</p>
+                        <p>{confirmationData?.message}</p>
+                        <button onClick={handleConfirmationSubmit}>Confirm Checkout</button>
+                        <button onClick={handleCancelOrder}>Cancel Checkout</button>
+                    </div>
+                )}
             </div>
           </div>
         </div>

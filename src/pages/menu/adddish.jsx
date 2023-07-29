@@ -29,7 +29,7 @@ const AddDish = ({
         <main>
             <Sidebar role={user.role}/>
             <div className="main-section">
-                <Header page={"Add New Inventory"} user={user} />
+                <Header page={"Add New Food/Drink"} user={user} />
                 <AddDishForm />
             </div>
         </main>

@@ -1,53 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
+import { fetchAPI, postAPI, patchAPI, deleteAPI } from '@api/*';
 
-async function fetchAPI(url) {
-    const response = await fetch(url, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    if (!response.ok) {
-      throw new Error("Request failed with status " + response.status);
-    }
-    const data = await response.json();
-    return data;
-  }
-  
-  async function postAPI(url, body) {
-    const response = await fetch(url, {
-      method: "POST",
-      body: JSON.stringify(body),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    if (!response.ok) {
-      throw new Error("Request failed with status " + response.status);
-    }
-    const data = await response.json();
-    return data;
-  }
-  
-  async function patchAPI(url, body) {
-    const response = await fetch(url, {
-      method: "PATCH",
-      body: JSON.stringify(body),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    if (!response.ok) {
-      throw new Error("Request failed with status " + response.status);
-    }
-    const data = await response.json();
-    return data;
-  }
-  
 const AddDishForm = () => {
     const router = useRouter();
-
 
     const [formValues, setFormValues] = useState({
         name: '',
@@ -58,6 +14,18 @@ const AddDishForm = () => {
     });
 
     const [ingredients, setIngredients] = useState([]);
+    const [units, setUnits] = useState([]); 
+    const [inventory, setInventory] = useState([]);
+    const [dishes, setDishes] = useState([]);
+    const [recipes, setRecipes] = useState([]);
+
+    useEffect(() => {   
+        getInventory();
+        getUnits();
+        getDishes();
+        getRecipes();
+    }, []);
+
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -80,7 +48,11 @@ const AddDishForm = () => {
         setIngredients(updatedIngredients);
       };
 
-    const handleSubmit = (e) => {
+    useEffect(() => {
+        console.log(ingredients);
+    }, [ingredients]);
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
     
         // Check if all required fields are filled
@@ -89,8 +61,10 @@ const AddDishForm = () => {
           return;
         }
     
+        const dishId = Math.max.apply(Math, dishes.map(function(i) { return i.dishId; })) + 1;
         // Construct the new dish object
         const newDish = {
+            dishId: dishId,
             dishName: formValues.name,
             dishPhoto: getFileNameFromPath(formValues.image),
             category: formValues.category,
@@ -102,20 +76,90 @@ const AddDishForm = () => {
         };
 
         console.log(newDish);
-        // Perform the necessary actions with the new dish data (e.g., save to API)
-        // postDish(newDish);
+        await postDish(newDish);
     
         // Reset form values and ingredients
-        setFormValues({
-          name: '',
-          price: '',
-          category: '',
-          description: '',
-          image: '',
+    
+        // loop ingredients and post to dish_ingredient table
+        let  recipeId = Math.max.apply(Math, recipes.map(function(i) { return i.recipeId; })) + 1;
+
+        ingredients.forEach(async (ingredient) => {
+            const newRecipe = {
+                recipeId: recipeId,
+                dishId: dishId,
+                ingredientId: inventory.find((i) => i.ingredientName === ingredient.ingredient).inventoryId,
+                quantity: parseFloat(ingredient.quantity),
+                unit: ingredient.unit,
+            };
+            console.log(newRecipe);
+            await postRecipe(newRecipe);
+            recipeId++;
         });
 
+        setFormValues({
+            name: '',
+            price: '',
+            category: '',
+            description: '',
+            image: '',
+          });
+
         setIngredients([]);
-      };
+    };
+
+    async function getInventory() {
+        try {
+            const data = await fetchAPI("/api/inventory/getInventoryWithId");
+            setInventory(data);
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
+    async function getUnits() {
+        try {
+            const data = await fetchAPI("/api/units_table/getUnits");
+            setUnits(data);
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
+    async function postDish(newDish) {
+        try {
+            const data = await postAPI("/api/dish/postDish", newDish);
+            console.log(data);
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
+    async function getDishes () {
+        try {
+            const data = await fetchAPI("/api/dish/getDish");
+            setDishes(data);
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
+    async function getRecipes () {
+        try {
+            const data = await fetchAPI("/api/recipe/getRecipes");
+            setRecipes(data);
+        } catch (err) {
+            console.error(err);
+        }
+    }
+    
+    async function postRecipe (newRecipe) {
+        try {
+            const data = await postAPI("/api/recipe/postRecipe", newRecipe);
+            console.log(data);
+        } catch (err) {
+            console.error(err);
+        }
+    }
 
     return (
         <div className='add-inventory-form'>
@@ -186,7 +230,7 @@ const AddDishForm = () => {
                 </div>
                 {/* Add Table where you can input ingredients, quantity, and unit */}
                 <div className="ingredients-table">
-                    <h2>Input List of Ingredients</h2>
+                    <h2>Input List of Recipe Ingredients</h2>
                     <table>
                         <thead>
                             <tr>
@@ -204,11 +248,18 @@ const AddDishForm = () => {
                             {ingredients.map((ingredient, index) => (
                                 <tr key={index}>
                                     <td>
-                                        <input
+                                        <select
                                             type="text"
                                             value={ingredient.ingredient}
                                             onChange={(e) => handleIngredientChange(index, 'ingredient', e.target.value)}
-                                        />
+                                        >
+                                            <option value="" hidden>Select Ingredient</option>
+                                            {inventory.map((i) => (
+                                                <option key={i.inventoryId} value={i.ingredientName}>
+                                                    {i.ingredientName}
+                                                </option>
+                                            ))}
+                                        </select>
                                     </td>
                                     <td>
                                         <input
@@ -218,11 +269,19 @@ const AddDishForm = () => {
                                         />
                                     </td>
                                     <td>
-                                        <input
+
+                                        <select
                                             type="text"
                                             value={ingredient.unit}
                                             onChange={(e) => handleIngredientChange(index, 'unit', e.target.value)}
-                                        />
+                                        >
+                                            <option value="" hidden>Select Unit</option>
+                                            {units.map((i) => (
+                                                <option key={i.unitshort} value={i.unitshort}>
+                                                    {i.unitshort}
+                                                </option>
+                                            ))}
+                                        </select>
                                     </td>
                                     <td>
                                         <button type="button" onClick={() => handleRemoveIngredient(index)}>
@@ -239,7 +298,7 @@ const AddDishForm = () => {
                     onClick={
                         () => router.push('/inventory')
                     }> Cancel</button>
-                <button type="submit">Save</button>
+                <button type="submit">Submit</button>
             </form>
         </div>
     )

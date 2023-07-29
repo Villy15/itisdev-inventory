@@ -29,7 +29,7 @@ const AddInventory = ({
         <main>
             <Sidebar role={user.role}/>
             <div className="main-section">
-                <Header page={"Add New Inventory"} user={user} />
+                <Header page={"Add New Ingredient"} user={user} />
                 <AddInventoryForm />
             </div>
         </main>

@@ -82,7 +82,7 @@ const manager_sidebar_items = [
     href: '/menu/adddish'
   },
   {
-    name: 'Add New Inventory',
+    name: 'Add New Ingredient',
     href: '/inventory/addinventory'
   },
   {
@@ -144,7 +144,7 @@ const chef_sidebar_items = [
     href: '/menu/adddish'
   },
   {
-    name: 'Add New Inventory',
+    name: 'Add New Ingredient',
     href: '/inventory/addinventory'
   },
 ];
