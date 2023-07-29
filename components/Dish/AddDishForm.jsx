@@ -1,6 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { fetchAPI, postAPI, patchAPI, deleteAPI } from '@api/*';
+import { FileUploader } from 'react-drag-drop-files';
+
+const fileTypes = ['JPEG', 'JPG', 'PNG'];
 
 const AddDishForm = () => {
     const router = useRouter();
@@ -48,6 +51,14 @@ const AddDishForm = () => {
         setIngredients(updatedIngredients);
       };
 
+    const [file, setFile] = useState(null);
+
+    const handleChange = (file) => {
+        // Assuming you want to handle only one file for the image, so we'll take the first one from the array.
+        // If you want to handle multiple images, modify accordingly.
+        setFile(file[0]);
+    };
+
     useEffect(() => {
         console.log(ingredients);
     }, [ingredients]);
@@ -74,6 +85,11 @@ const AddDishForm = () => {
             description: formValues.description,
             confirmed: false,
         };
+
+         // Append the image file to the newDish object (if present)
+        if (file) {
+            newDish.image = file.preview;
+        }
 
         console.log(newDish);
         await postDish(newDish);
@@ -106,6 +122,7 @@ const AddDishForm = () => {
           });
 
         setIngredients([]);
+        setFile(null); // Reset the selected file after form submission
     };
 
     async function getInventory() {
@@ -218,15 +235,14 @@ const AddDishForm = () => {
                     </div>
                     <div className="form-group">
                         <label htmlFor="image">Upload your image here: </label>
-                        <input
-                            type="file"
+                        <FileUploader
+                            multiple={true}
+                            handleChange={handleChange}
                             name="image"
-                            id="image"
-                            accept="image/*"
-                            className='description'
-                            value={formValues.image}
-                            onChange={handleInputChange}
+                            types={fileTypes}
+                            uploadText="Drop or click to select an image"
                         />
+                        <p>{file ? `File name: ${file.name}` : 'no image selected'}</p>
                     </div> 
                 </div>
                 {/* Add Table where you can input ingredients, quantity, and unit */}

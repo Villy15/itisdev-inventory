@@ -404,9 +404,9 @@ const handleCancelOrder = () => {
                   <div key={order.dishId} className="order-item" id = 'orderItem'> 
                     <div className="order-name">{order.dishName}</div>
                     <div className="order-quantity"> 
-                      <button className="deduct-quantity" onClick={() => handleDeductQuantity(order.dishId)}> - </button> 
-                        {order.dishQuantity}  
-                      <button className="add-quantity" onClick={() => handleAddQuantity(order.dishId)}> + </button>
+                      <button className="add-quantity" onClick={() => handleAddQuantity(order.dishId)}> + </button> 
+                        <div className="quantity-text">{order.dishQuantity}</div>
+                        <button className="deduct-quantity" onClick={() => handleDeductQuantity(order.dishId)}> - </button>
                     </div>
                     <div className="order-price">{order.dishPrice}</div>
                     <button className="cancel" onClick={() => removeItem(order.dishId)}> Remove </button>

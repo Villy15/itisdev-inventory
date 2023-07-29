@@ -647,6 +647,10 @@ select {
         .order-quantity {
             justify-content: center;
         }
+
+        .deduct-quantity {
+            margin-left: 15px; /* Add spacing between the text and the button */
+        }
   
         .order-price {
           font-size: 1.5rem;
