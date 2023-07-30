@@ -93,6 +93,10 @@ table {
         // padding-right: 11%;
     }
 
+    .variant-select {
+        width: 200px;
+    }
+
     input {
         padding: 0.5rem;
         border-radius: 4px;
@@ -161,6 +165,7 @@ table {
     }
 }
 
+
 .smaller-width {
     display: flex;
     flex-direction: column;
@@ -172,15 +177,27 @@ table {
     width: 12px;
     height: 12px;
     border-radius: 50%;
-  }
-  
-  .low-stock {
+}
+
+.low-stock {
     background-color: orange;
-  }
-  
-  .out-of-stock {
+}
+
+.out-of-stock {
     background-color: red;
-  }
+}
+
+.green {
+    background-color: green;
+}
+
+.orange {
+    background-color: orange;
+}
+
+.red {
+    background-color: red;
+}
 
 .dashboard-stock {
     .row {
@@ -446,6 +463,20 @@ table {
     gap: 1rem;
 }
 
+.users-row {
+    // Flex start from left
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 1rem;
+
+
+    button {
+        margin-bottom: 1rem;
+    }
+}
+
+
 .details {
     display: flex;
     flex-direction: column;
@@ -465,13 +496,30 @@ table {
     }
 }
 
+.legend {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: baseline;
+    gap: 1rem;
+
+
+}
 
 .add-inventory-form {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    width: 60%;
+    width: 100%;
     padding: 1rem; 
+
+    h1  {
+        margin-bottom: 1rem;
+    }
+
+    p {
+        margin-bottom: 1rem;
+    }
 }
 
 .ingredients-table {

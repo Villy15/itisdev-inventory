@@ -44,12 +44,14 @@ export default function Menu({ user }) {
   };
 
   useEffect(() => {
-    if (user.role === "Guest") {
-      router.push("/login");
+    console.log(user.role);
+    if (user.role !== "Chef" && user.role !== "Manager") {
+        router.push("/login");
     } else {
       getDish();
     }
   }, [user, router]);
+
 
 
   useEffect(() => {

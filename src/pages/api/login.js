@@ -34,6 +34,8 @@ async function loginRoute(req, res) {
     id: user.id,
     username: user.username,
     role: user.role,
+    firstname: user.firstname,
+    lastname: user.lastname,
   };
 
 

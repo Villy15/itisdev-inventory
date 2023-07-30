@@ -1,6 +1,8 @@
 import Header from "@components/Header";
 import Sidebar from "@components/Sidebar";
 import AddVariantForm from "@components/Variant/AddVariantForm";
+import { useEffect } from "react";
+import { useRouter } from "next/router";
 
 import { withSessionSsr } from "@lib/withSession";
 
@@ -25,6 +27,15 @@ export const getServerSideProps = withSessionSsr(
 const AddVariant = ({
     user
 }) => {
+    const router = useRouter();
+
+    useEffect(() => {
+        console.log(user.role);
+        if (user.role !== "Stock Controller" && user.role !== "Manager") {
+            router.push("/login");
+        } 
+      }, [user, router]);
+
     return (
         <main>
             <Sidebar role={user.role}/>

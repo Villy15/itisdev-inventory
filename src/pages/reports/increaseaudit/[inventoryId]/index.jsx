@@ -143,13 +143,13 @@ const Reports = ({
                                         {i.newDate.replace('T', ' ').slice(0, -6)}
 
                                     </td>
-                                    <td>
-                                        {i.quantity}
+                                    <td className="row-right">
+                                        {i.quantity.toFixed(2)}
                                     </td>
-                                    <td>
+                                    <td className="row-left">
                                         {i.unit}
                                     </td>
-                                    <td>
+                                    <td className="row-left">
                                         {i.users.lastname}
                                     </td>
                                 </tr>

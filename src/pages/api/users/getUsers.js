@@ -7,7 +7,8 @@ async function getUsers(req, res) {
     try {
         let { data: users, error } = await supabase
             .from('users')
-            .select('*');
+            .select('*')
+            .order('firstname', true);
 
         if (error) {
             throw error;

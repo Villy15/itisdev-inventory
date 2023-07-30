@@ -107,13 +107,13 @@ const Reports = ({
             <tbody>
               {currentItems.map((i, index) => (
                 <tr key={index}>
-                  <td>
+                  <td className="row-left">
                     {i.inventory.ingredientName}
                   </td>
-                  <td>
+                  <td className="row-left">
                     {i.unit}
                   </td>
-                  <td>
+                  <td className="row-right">
                     {i.quantity}
                   </td>
                 </tr>

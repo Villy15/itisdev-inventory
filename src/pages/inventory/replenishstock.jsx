@@ -1,6 +1,8 @@
 import Header from "@components/Header";
 import Sidebar from "@components/Sidebar";
 import ReplenishStockForm from "@components/Inventory/ReplenishStockForm";
+import { useEffect } from "react";
+import { useRouter } from "next/router";
 
 import { withSessionSsr } from "@lib/withSession";
 
@@ -25,6 +27,15 @@ export const getServerSideProps = withSessionSsr(
 const ReplenishStock = ({
     user
 }) => {
+    const router = useRouter();
+    
+    useEffect(() => {
+        console.log(user.role);
+        if (user.role !== "Stock Controller" && user.role !== "Manager") {
+            router.push("/login");
+        } 
+      }, [user, router]);
+
     return (
         <main>
             <Sidebar role={user.role}/>

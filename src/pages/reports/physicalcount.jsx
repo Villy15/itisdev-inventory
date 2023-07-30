@@ -6,6 +6,7 @@ import { fetchAPI, postAPI, patchAPI, deleteAPI } from '@api/*';
 import { withSessionSsr } from "@lib/withSession";
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { useRouter } from "next/router";
 
 export const getServerSideProps = withSessionSsr(
   async function getServerSideProps({ req, res }) {
@@ -35,9 +36,18 @@ const Reports = ({
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [searchQuery, setSearchQuery] = useState('');
 
+  const router = useRouter();
+
   useEffect(() => {
     getPhysicalCount();
   }, []);
+
+  useEffect(() => {
+    console.log(user.role);
+    if (user.role !== "Manager") {
+        router.push("/login");
+    } 
+  }, [user, router]);
 
   async function getPhysicalCount() {
     try {
@@ -107,7 +117,7 @@ const Reports = ({
                                 {/* format date of  2023-07-28T14:06:58+00:00 to YYYY-MM-DD*/}
                                 {i.updateDate.split('T')[0]}
                             </td>
-                            <td>
+                            <td className="row-left">
                                 {i.users.lastname}
                             </td>
                             <td>

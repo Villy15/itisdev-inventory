@@ -6,6 +6,7 @@ import Link from "next/link";
 
 import { withSessionSsr } from "@lib/withSession";
 import { useState, useEffect } from "react";
+import { useRouter } from "next/router";
 
 export const getServerSideProps = withSessionSsr(
   async function getServerSideProps({ req, res }) {
@@ -40,10 +41,19 @@ const Reports = ({
 
   const [inventorylist, setInventory] = useState([]);
 
+  const router = useRouter();
+
   useEffect(() => {
     getCoversion();
     getInventory();
   }, []);
+
+  useEffect(() => {
+    console.log(user.role);
+    if (user.role !== "Manager") {
+        router.push("/login");
+    } 
+  }, [user, router]);
 
   useEffect(() => {
 
@@ -92,6 +102,7 @@ const Reports = ({
         console.error(err);
       }
     }
+    
 
     getIncreased();
 
@@ -133,6 +144,7 @@ const Reports = ({
     }
   };
 
+
   async function getCoversion() {
     try {
       const data = await fetchAPI("/api/conversion_table/getConversions");
@@ -165,13 +177,14 @@ const Reports = ({
     }
   }
 
+  
   return (
     <main>
       <Sidebar role={user.role} />
       <div className="main-section">
         <Header page={"Increase Report"} user={user} />
         <div className="reports">
-          <h1 className="margin-bottom">Increase Summary Report</h1>
+          <h1 className="">Increase Summary Report</h1>
           {/* <input
             type="text"
             placeholder="Search ItemName"
@@ -200,7 +213,8 @@ const Reports = ({
                     {i.date}
                   </td>
                   <td className="row-right">
-                    {i.quantity}
+                    {/* 3.5000000000000004 sometimes this happens. when decimal format to decimal places */}
+                    {i.quantity.toFixed(2)}
                   </td>
                   <td className="row-left">
                     {i.unit}

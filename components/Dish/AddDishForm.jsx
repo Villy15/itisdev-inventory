@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { fetchAPI, postAPI, patchAPI, deleteAPI } from '@api/*';
 import { FileUploader } from 'react-drag-drop-files';
+// import { fs } from 'fs';
 
 const fileTypes = ['JPEG', 'JPG', 'PNG'];
 
@@ -72,15 +73,20 @@ const AddDishForm = () => {
           return;
         }
     
+        let fileName = '';
+
+        if (file) 
+            fileName = file.name.split('.')[0]
+        
         const dishId = Math.max.apply(Math, dishes.map(function(i) { return i.dishId; })) + 1;
         // Construct the new dish object
         const newDish = {
             dishId: dishId,
             dishName: formValues.name,
-            dishPhoto: getFileNameFromPath(formValues.image),
+            dishPhoto: fileName,
             category: formValues.category,
             price: parseFloat(formValues.price),
-            enable: false,
+            enable: true,
             enableDate: new Date().toLocaleString('en-US', { timeZone: 'Asia/Singapore' }),
             description: formValues.description,
             confirmed: false,
@@ -91,7 +97,10 @@ const AddDishForm = () => {
             newDish.image = file.preview;
         }
 
+
+
         console.log(newDish);
+
         await postDish(newDish);
     
         // Reset form values and ingredients
@@ -120,10 +129,16 @@ const AddDishForm = () => {
             description: '',
             image: '',
           });
+          
 
         setIngredients([]);
         setFile(null); // Reset the selected file after form submission
     };
+
+    // useEffect(() => {
+    //     console.log(formValues);
+    // }, [formValues]);
+
 
     async function getInventory() {
         try {
@@ -241,6 +256,8 @@ const AddDishForm = () => {
                             name="image"
                             types={fileTypes}
                             uploadText="Drop or click to select an image"
+                            value={formValues.image}
+                            onChange={handleInputChange}
                         />
                         <p>{file ? `File name: ${file.name}` : 'no image selected'}</p>
                     </div> 
@@ -320,15 +337,5 @@ const AddDishForm = () => {
         </div>
     )
 }
-
-function getFileNameFromPath(filePath) {
-    // Split the filePath by the backslash (\) or forward slash (/) to separate the path and filename
-    const pathSegments = filePath.split(/[\\\/]/);
-    // Get the last segment (filename) and split it by the dot (.) to separate the filename and extension
-    const filenameSegments = pathSegments.pop().split('.');
-    // Join all segments except the last one to get the filename without the extension
-    return filenameSegments.slice(0, -1).join('.');
-}
-
 
 export default AddDishForm

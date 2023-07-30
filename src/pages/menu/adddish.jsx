@@ -1,6 +1,8 @@
 import Header from "@components/Header";
 import Sidebar from "@components/Sidebar";
 import AddDishForm from "@components/Dish/AddDishForm";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
 
 import { withSessionSsr } from "@lib/withSession";
 
@@ -25,6 +27,15 @@ export const getServerSideProps = withSessionSsr(
 const AddDish = ({
     user
 }) => {
+    const router = useRouter();
+
+    useEffect(() => {
+        console.log(user.role);
+        if (user.role !== "Chef" && user.role !== "Manager") {
+            router.push("/login");
+        } 
+      }, [user, router]);
+
     return (
         <main>
             <Sidebar role={user.role}/>

@@ -9,11 +9,17 @@ const AddUserForm = () => {
         password: '',
         confirmPassword: '',
         position: '',
+        firstname: '',
+        lastname: '',
     });
 
     useEffect(() => {
         fetchUsers();
     }, []);
+
+    useEffect(() => {
+        console.log(users);
+    }, [users]);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -29,10 +35,12 @@ const AddUserForm = () => {
         }
 
         const newUser = { 
-            id: Math.max.apply(Math, users.map(function(i) { return i.id; })) + 1,
             username: formValues.username,
             password: formValues.password,
             role: formValues.position,
+            lastname: formValues.lastname,
+            firstname: formValues.firstname,
+            enable: true,
     
             // inventoryId: Math.max.apply(Math, inventory.map(function(i) { return i.inventoryId; })) + 1,
             // ingredientName: formValues.name,
@@ -43,6 +51,7 @@ const AddUserForm = () => {
             // enableDate: new Date().toLocaleString('en-US', { timeZone: 'Asia/Singapore' }),
          };
 
+         console.log(newUser);
         postUser(newUser);
 
         setFormValues({
@@ -50,6 +59,9 @@ const AddUserForm = () => {
             password: '',
             confirmPassword: '',
             position: '',
+            firstname: '',
+            lastname: '',
+            
         });
     };
 
@@ -111,6 +123,29 @@ const AddUserForm = () => {
                 </div>
                 <div className="sub-group">
                     <div className="form-group">
+                        <label htmlFor="firstname">Input First Name: <span>* </span></label>
+                        <input
+                            type="text"
+                            name="firstname"
+                            id="firstname"
+                            value={formValues.firstname}
+                            onChange={handleInputChange}
+                        />
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="lastname">Input Last Name: <span>* </span></label>
+                        <input
+                            type="password"
+                            name="lastname"
+                            id="lastname"
+                            value={formValues.lastname}
+                            onChange={handleInputChange}
+                        />
+                        {/* Add password does not match */}
+                    </div>
+                </div>
+                <div className="sub-group">
+                    <div className="form-group">
                         <label htmlFor="password">Input Password: <span>* </span></label>
                         <input
                             type="password"
@@ -145,6 +180,7 @@ const AddUserForm = () => {
                         <option value="Manager">Manager</option>
                         <option value="Stock Controller">Stock Controller</option>
                         <option value="Cashier">Cashier</option>                       
+                        <option value="Chef">Chef</option>                       
                     </select>
                 </div>
                 <button type="button" 

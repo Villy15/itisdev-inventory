@@ -1,6 +1,7 @@
 import Header from "@components/Header";
 import Sidebar from "@components/Sidebar";
 import Table from "@components/Table";
+import { useRouter } from "next/router";
 
 import { withSessionSsr } from "@lib/withSession";
 
@@ -24,12 +25,22 @@ export const getServerSideProps = withSessionSsr(async function getServerSidePro
 });
 
 const Inventory = ({ user }) => {
+
+  const router = useRouter();
+
   const [inventory, setInventory] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
 
   const [originalInventory, setOriginalInventory] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
+
+  useEffect(() => {
+    console.log(user.role);
+    if (user.role !== "Stock Controller" && user.role !== "Manager") {
+        router.push("/login");
+    } 
+  }, [user, router]);
 
   useEffect(() => {
     getInventory();

@@ -81,8 +81,9 @@ export default function POS({ user }) {
   const [confirmationData, setConfirmationData] = useState(null);
 
   useEffect(() => {
-    if (user.role === "Guest") {
-      router.push("/login");
+    console.log(user.role);
+    if (user.role !== "Cashier" && user.role !== "Manager") {
+        router.push("/login");
     } else {
       getDish();
     }
@@ -196,6 +197,12 @@ export default function POS({ user }) {
                 return;
               }
             });
+
+            console.log("Recipe Quantity: " + recipeItem.quantity);
+            console.log("Recipe Unit: " + recipeItem.unit);
+            console.log("Inventory Quantity: " + inventoryItem.quantity);
+            console.log("Inventory Unit: " + inventoryItem.unit);
+            
                         
             console.log("Converted Recipe Quantity: " + convertedRecipeQuantity);
             newInventory = {

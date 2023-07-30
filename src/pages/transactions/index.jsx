@@ -28,9 +28,10 @@ export default function Transactions({ user }) {
   const router = useRouter();
   
   useEffect(() => {
-    if (user.role === "Guest") {
-      router.push("/login");
-    }
+    console.log(user.role);
+    if (user.role !== "Manager") {
+        router.push("/login");
+    } 
   }, [user, router]);
 
   const [originalInventory, setOriginalInventory] = useState([]);
@@ -98,7 +99,6 @@ export default function Transactions({ user }) {
     columns: [
       { label: 'Order Id', key: 'orderId' },
       { label: 'Total Price', key: 'totalPrice' },
-      { label: 'Table Number', key: 'tableNumber' },
       { label: 'Order Date', key: 'orderDate' },
       { label: 'User Id', key: 'userId' },
     ],

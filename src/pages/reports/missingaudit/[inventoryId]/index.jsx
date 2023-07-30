@@ -101,7 +101,7 @@ const Reports = ({
         <main>
             <Sidebar role={user.role} />
             <div className="main-section">
-                <Header page={"Detaled Increase Report"} user={user} />
+                <Header page={"Detaled Descrepancy Report"} user={user} />
                 <div className="reports">
                     <div className="details">
                         <div className="row">
@@ -143,13 +143,13 @@ const Reports = ({
                                         {i.newDate.replace('T', ' ').slice(0, -6)}
 
                                     </td>
-                                    <td>
-                                        {i.quantity}
+                                    <td className="row-right">
+                                        {i.quantity < 0 ? `+${(i.quantity * -1).toFixed(2)}` : i.quantity.toFixed(2)}
                                     </td>
-                                    <td>
+                                    <td className="row-left">
                                         {i.unit}
                                     </td>
-                                    <td>
+                                    <td className="row-left">
                                         {i.users.lastname}
                                     </td>
                                 </tr>

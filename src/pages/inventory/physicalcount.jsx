@@ -2,6 +2,8 @@
 import Header from "@components/Header";
 import Sidebar from "@components/Sidebar";
 import InputPhysicalForm from "@components/Inventory/InputPhysicalForm";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
 
 import { withSessionSsr } from "@lib/withSession";
 
@@ -26,7 +28,14 @@ export const getServerSideProps = withSessionSsr(
 const InputPhysicalCount = ({
     user
 }) => {
-    console.log(user);
+    const router = useRouter();
+
+    useEffect(() => {
+        console.log(user.role);
+        if (user.role !== "Stock Controller" && user.role !== "Manager") {
+            router.push("/login");
+        } 
+      }, [user, router]);
     
 
     return (

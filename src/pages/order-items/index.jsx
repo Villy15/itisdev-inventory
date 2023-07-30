@@ -28,9 +28,10 @@ export default function Transactions({ user }) {
   const router = useRouter();
   
   useEffect(() => {
-    if (user.role === "Guest") {
-      router.push("/login");
-    }
+    console.log(user.role);
+    if (user.role !== "Manager") {
+        router.push("/login");
+    } 
   }, [user, router]);
 
   const [originalInventory, setOriginalInventory] = useState([]);

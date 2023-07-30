@@ -1,7 +1,6 @@
 import Header from "@components/Header";
 import Sidebar from "@components/Sidebar";
-import AddInventoryForm from "@components/Inventory/AddInventoryForm";
-import { useEffect } from "react";
+import ChangePasswordForm from "@components/Users/ChangePasswordForm";
 import { useRouter } from "next/router";
 
 import { withSessionSsr } from "@lib/withSession";
@@ -28,19 +27,23 @@ const AddInventory = ({
     user
 }) => {
     const router = useRouter();
-    useEffect(() => {
-        console.log(user.role);
-        if (user.role !== "Chef" && user.role !== "Manager") {
-            router.push("/login");
-        } 
-      }, [user, router]);
+    const { id } = router.query;
+    
+    if (user.role !== "Manager") {
+        return (
+            <div className="main-section">
+                <Header page={"Add New User"} user={user} />
+                <h1>Access Denied</h1>
+            </div>
+        )
+    } 
 
     return (
         <main>
             <Sidebar role={user.role}/>
             <div className="main-section">
-                <Header page={"Add New Ingredient"} user={user} />
-                <AddInventoryForm />
+                <Header page={"Change Password"} user={user} />
+                <ChangePasswordForm id={id} />
             </div>
         </main>
     )

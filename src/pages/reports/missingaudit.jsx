@@ -6,6 +6,7 @@ import Link from "next/link";
 
 import { withSessionSsr } from "@lib/withSession";
 import { useState, useEffect } from "react";
+import { useRouter } from "next/router";
 
 export const getServerSideProps = withSessionSsr(
   async function getServerSideProps({ req, res }) {
@@ -40,10 +41,19 @@ const Reports = ({
 
   const [inventorylist, setInventory] = useState([]);
 
+  const router = useRouter();
+
   useEffect(() => {
     getCoversion();
     getInventory();
   }, []);
+
+  useEffect(() => {
+    console.log(user.role);
+    if (user.role !== "Manager") {
+        router.push("/login");
+    } 
+  }, [user, router]);
 
   useEffect(() => {
 
@@ -169,9 +179,9 @@ const Reports = ({
     <main>
       <Sidebar role={user.role} />
       <div className="main-section">
-        <Header page={"View Missing Report"} user={user} />
+        <Header page={"View Descrepancy Report"} user={user} />
         <div className="reports">
-          <h1 className="margin-bottom">Missing Summary Report</h1>
+          <h1 className="margin-bottom">Descrepancy Summary Report</h1>
           {/* <input
             type="text"
             placeholder="Search ItemName"
@@ -200,7 +210,10 @@ const Reports = ({
                     {i.date}
                   </td>
                   <td className="row-right">
-                    {i.quantity}
+                    {/* {i.quantity.toFixed(2)}  */}
+                    {/* If the value is negative, make it + since this is a descrepancy report */}
+                    
+                    {i.quantity < 0 ? `+${(i.quantity * -1).toFixed(2)}` : i.quantity.toFixed(2)}
                   </td>
                   <td className="row-left">
                     {i.unit}

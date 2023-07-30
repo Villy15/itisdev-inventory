@@ -26,7 +26,7 @@ const manager_sidebar_items = [
     href: '/reports/expiredaudit'
   },
   {
-    name: 'View Missing Report',
+    name: 'View Descrepancy Report',
     href: '/reports/missingaudit'
   },
   {
@@ -54,41 +54,37 @@ const manager_sidebar_items = [
     href: '/variants',
   },
   {
-    name: 'Add New User',
-    href: '/users/addUser'
+    name: 'Add Food/Drink',
+    href: '/menu/adddish'
   },
-  // {
-  //   name: 'Add Food/Drink',
-  //   href: '/menu/adddish'
-  // },
-  // {
-  //   name: 'Add New Variants',
-  //   href: '/variants/addVariant',
-  // },
-  // {
-  //   name: 'Record Purchase',
-  //   href: '/inventory/replenishstock',
-  // }, 
-  // {
-  //   name: 'Input Expired',
-  //   href: '/inventory/expired',
-  // }, 
-  // {
-  //   name: 'Input Physical Count',
-  //   href: '/inventory/physicalcount',
-  // },
-  // {
-  //   name: 'Add Food/Drink',
-  //   href: '/menu/adddish'
-  // },
-  // {
-  //   name: 'Add New Ingredient',
-  //   href: '/inventory/addinventory'
-  // },
-  // {
-  //   name: 'POS Menu',
-  //   href: '/pos'
-  // },  
+  {
+    name: 'Add New Variants',
+    href: '/variants/addVariant',
+  },
+  {
+    name: 'Record Purchase',
+    href: '/inventory/replenishstock',
+  }, 
+  {
+    name: 'Input Expired',
+    href: '/inventory/expired',
+  }, 
+  {
+    name: 'Input Physical Count',
+    href: '/inventory/physicalcount',
+  },
+  {
+    name: 'Add Food/Drink',
+    href: '/menu/adddish'
+  },
+  {
+    name: 'Add New Ingredient',
+    href: '/inventory/addinventory'
+  },
+  {
+    name: 'POS Menu',
+    href: '/pos'
+  },  
 ];
 
 const stock_controller_sidebar_items = [

@@ -27,6 +27,14 @@ export const getServerSideProps = withSessionSsr(async function getServerSidePro
 const Inventory = ({ user }) => {
     const router = useRouter();
 
+
+    useEffect(() => {
+        console.log(user.role);
+        if (user.role !== "Stock Controller" && user.role !== "Manager") {
+            router.push("/login");
+        } 
+      }, [user, router]);
+
     const [originalInventory, setOriginalInventory] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
 
@@ -236,6 +244,15 @@ const Inventory = ({ user }) => {
                             currentPage={currentPage}
                             paginate={paginate}
                         />
+                        {/* Add legend info */}
+
+                        <div className="legend">
+                            <div className="circle out-of-stock" />
+                            <p>Out of Stock</p>
+                        
+                            <div className="circle low-stock" />
+                            <p>Low Stock</p>
+                        </div>
                     </div>
                 </div>
             </div>

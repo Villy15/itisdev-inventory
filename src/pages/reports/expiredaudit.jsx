@@ -6,6 +6,7 @@ import Link from "next/link";
 
 import { withSessionSsr } from "@lib/withSession";
 import { useState, useEffect } from "react";
+import { useRouter } from "next/router";
 
 export const getServerSideProps = withSessionSsr(
   async function getServerSideProps({ req, res }) {
@@ -40,10 +41,21 @@ const Reports = ({
 
   const [inventorylist, setInventory] = useState([]);
 
+  const router = useRouter();
+
+
   useEffect(() => {
     getCoversion();
     getInventory();
   }, []);
+
+  useEffect(() => {
+    console.log(user.role);
+    if (user.role !== "Manager") {
+        router.push("/login");
+    } 
+  }, [user, router]);
+
 
   useEffect(() => {
 
@@ -200,7 +212,7 @@ const Reports = ({
                     {i.date}
                   </td>
                   <td className="row-right">
-                    {i.quantity}
+                    {i.quantity.toFixed(2)}
                   </td>
                   <td className="row-left">
                     {i.unit}

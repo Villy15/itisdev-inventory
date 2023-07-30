@@ -1,6 +1,8 @@
 import Header from "@components/Header";
 import Sidebar from "@components/Sidebar";
 import InputExpiredForm from "@components/Inventory/InputExpiredForm";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
 
 import { withSessionSsr } from "@lib/withSession";
 
@@ -23,9 +25,18 @@ export const getServerSideProps = withSessionSsr(
 );
 
 const InputExpired = ({
+
+    
     user
 }) => {
-    console.log(user);
+    const router = useRouter();
+
+    useEffect(() => {
+        console.log(user.role);
+        if (user.role !== "Stock Controller" && user.role !== "Manager") {
+            router.push("/login");
+        } 
+      }, [user, router]);
     
 
     return (

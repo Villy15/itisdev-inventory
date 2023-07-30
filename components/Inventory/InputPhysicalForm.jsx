@@ -16,16 +16,24 @@ const InputPhysicalForm = ({ user }) => {
 
     const [missingInventory, setMissingInventory] = useState([]);
 
+    const [variant, setVariant] = useState([]); 
+    const [ingredientVariants, setIngredientVariants] = useState({});
+
     useEffect(() => {
         getInventory();
         getPhysicalCount();
         getMissing();
+        getVariant();
     }, []);
     
     useEffect(() => {
         // console.log(inventory);
         // console.log(physicalCount);
     }, [inventory, physicalCount]);
+    
+    useEffect(() => {
+        console.log(variant);
+    }, [variant]);
 
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -37,7 +45,9 @@ const InputPhysicalForm = ({ user }) => {
 
     const handleQuantityChange = (index, value) => {
         const updatedInventory = [...inventory];
-        updatedInventory[index].quantity = value;
+        const indexOfFirstItemOnPage = (currentPage - 1) * itemsPerPage;
+        const actualIndex = indexOfFirstItemOnPage + index;
+        updatedInventory[actualIndex].quantity = value;
         setInventory(updatedInventory);
     };
 
@@ -91,6 +101,12 @@ const InputPhysicalForm = ({ user }) => {
             const inventoryWithInitialQuantity = data.map((item) => ({ ...item, quantity: '' }));
             setInventory(inventoryWithInitialQuantity);
             setCurrentInventory(data);
+
+            const ingredientVariantsMap = {};
+            data.forEach((item) => {
+                ingredientVariantsMap[item.inventoryId] = variant.filter((v) => v.inventory.inventoryId === item.inventoryId);
+            });
+            setIngredientVariants(ingredientVariantsMap);
         } catch (err) {
             console.error(err);
         }
@@ -142,6 +158,15 @@ const InputPhysicalForm = ({ user }) => {
         }
     }
 
+    async function getVariant() {
+        try { 
+            const data = await fetchAPI(`/api/variation/getAllVariantswId`);
+            setVariant(data);
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
     return (
         <div className='add-inventory-form'>
             <div className="ingredients-table">
@@ -149,6 +174,7 @@ const InputPhysicalForm = ({ user }) => {
                     <thead>
                         <tr>
                             <th>Item Name</th>
+                            <th>Variant Option</th>
                             <th>Unit of Measurement</th>
                             <th>Quantity</th>
                         </tr>
@@ -158,6 +184,26 @@ const InputPhysicalForm = ({ user }) => {
                             <tr key={index}>
                                 <td className='row-left'>
                                     {inventory.ingredientName}
+                                </td>
+                                <td >
+                                    <select
+                                        type="text"
+                                        name="variant"
+                                        id="variant"
+                                        style={{ width: '400px' }} // A
+                                    >
+                                        <option value="" hidden>
+                                            {ingredientVariants[inventory.inventoryId]?.length < 1
+                                                ? 'No Variant'
+                                                : 'Select Variant'}
+                                        </option>
+                                        {/* Display only the variants associated with the current ingredient */}
+                                        {ingredientVariants[inventory.inventoryId]?.map((i) => (
+                                            <option key={i.variationId} value={i.variationName}>
+                                                {i.variationName}
+                                            </option>
+                                        ))}
+                                    </select>
                                 </td>
                                 <td className='row-left'>
                                     {inventory.unit}

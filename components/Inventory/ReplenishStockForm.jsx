@@ -210,6 +210,10 @@ const ReplenishStockForm = ({user}) => {
         }
     }
 
+    const isVariantSelected = () => {
+        return formValues.variant !== '';
+      };
+
     return (
         <div className='add-inventory-form'>
             <form onSubmit={handleSubmit}>
@@ -237,29 +241,33 @@ const ReplenishStockForm = ({user}) => {
                         ))}
                     </select>
                 </div>
-                {variant.length > 0 && (
-                    <div className="form-group">
-                        <label htmlFor="name"> Variant<span>* </span>
-                        </label>
-                        <select
-                            type="text"
-                            name="variant"
-                            id="variant"
-                            value={formValues.variant}
-                            onChange={handleInputChange}
-                        >
-                            <option value="" hidden>Select Variant</option>
-                            {variant.map((i) => (
-                                <option key={i.variationId} value={i.variationName}>
-                                    {i.variationName}
-                                </option>
-                            ))}
-                        </select>
-                        <button type="button" onClick={() => router.push(`/variants/addVariant?ingredientId=${selectedInventoryId}`)}> 
-                            Add New Variant
-                        </button>
-                    </div>
-                )}
+
+                <div className="form-group">
+                    <div className="sub-group"></div>
+                    <label htmlFor="name"> Variant<span>* </span>
+                    </label>
+                    <select
+                        type="text"
+                        name="variant"
+                        id="variant"
+                        value={formValues.variant}
+                        onChange={handleInputChange}
+                    >
+                        {/* If variant.length is < 1 say no variant */}
+                        <option value="" hidden>
+                            {variant.length < 1 ? 'No Variant' : 'Select Variant'}
+                        </option>
+                        {variant.map((i) => (
+                            <option key={i.variationId} value={i.variationName}>
+                                {i.variationName}
+                            </option>
+                        ))}
+                    </select>
+                    <button type="button" onClick={() => router.push(`/variants/addVariant?ingredientId=${selectedInventoryId}`)}>
+                        Add New Variant
+                    </button>
+                </div>
+        
                 <div className="form-group">
                     <label htmlFor="quantity">Quantity <span>* </span>
                     </label>
@@ -271,9 +279,12 @@ const ReplenishStockForm = ({user}) => {
                         onChange={handleInputChange}
                     />
                 </div>
-                {variant.length < 1 && (
+                {/* {variant.length < 1 && ( */}
+                {/* Add the condition to disable "Unit Measurement" when a variant is selected */}
+                {!isVariantSelected() && (
                     <div className="form-group">
-                        <label htmlFor="quantity">Unit Measurement <span>* </span>
+                        <label htmlFor="quantity">
+                            Unit Measurement<span>* </span>
                         </label>
                         <select
                             type="text"
@@ -282,7 +293,9 @@ const ReplenishStockForm = ({user}) => {
                             value={formValues.units}
                             onChange={handleInputChange}
                         >
-                            <option value="" hidden>Select Unit</option>
+                            <option value="" hidden>
+                                Select Unit
+                            </option>
                             {units.map((i) => (
                                 <option key={i.unitshort} value={i.unitshort}>
                                     {i.unitshort}
@@ -290,8 +303,9 @@ const ReplenishStockForm = ({user}) => {
                             ))}
                         </select>
                     </div>
-                    
                 )}
+
+                { }
                 <button type="button" 
                     onClick={
                         () => router.push('/inventory')

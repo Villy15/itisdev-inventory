@@ -23,7 +23,7 @@ const Header = ({user, page}) => {
             {/* <IoNotificationsOutline className='icon'/> */}
             <div className="user">
                 <RxAvatar className='icon'/>
-                <span>{user.role}</span>
+                <span>{user.lastname}, {user.firstname}</span>
             </div>
             {
               user.role !== "Guest" && <button onClick={logout}>Logout</button>
