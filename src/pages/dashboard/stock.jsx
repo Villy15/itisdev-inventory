@@ -224,10 +224,10 @@ const Inventory = ({ user }) => {
                                             {inventory.unit}
                                         </td>
                                         <td className="row-right">
-                                            {inventory.quantity}
+                                            {inventory.quantity.toFixed(2)}
                                         </td>
                                         <td className="row-right">
-                                            {inventory.minquantity}
+                                            {inventory.minquantity.toFixed(2)}
                                         </td>
                                         <td>
                                             <button type="button" onClick={() => router.push(`/inventory/replenishstock?inventoryId=${inventory.inventoryId}`)}>

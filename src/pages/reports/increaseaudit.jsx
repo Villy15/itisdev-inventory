@@ -182,9 +182,9 @@ const Reports = ({
     <main>
       <Sidebar role={user.role} />
       <div className="main-section">
-        <Header page={"Increase Report"} user={user} />
+        <Header page={"Replenish Report"} user={user} />
         <div className="reports">
-          <h1 className="">Increase Summary Report</h1>
+          <h1 className="">Replenish Stock Summary Report</h1>
           {/* <input
             type="text"
             placeholder="Search ItemName"

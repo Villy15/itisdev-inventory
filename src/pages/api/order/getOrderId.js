@@ -5,14 +5,16 @@ export default withSessionRoute(getOrders);
 
 async function getOrders(req, res) {
     try {
+        const { orderId } = req.query;
+        
         let { data: orders, error } = await supabase
             .from('order')
             .select(`
-                orderId,
                 orderDate,
                 totalPrice,
                 users(id, lastname)
             `)
+            .eq('orderId', orderId)
             .order('orderDate', { ascending: false });
 
         if (error) {

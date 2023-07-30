@@ -1,15 +1,17 @@
 import Header from "@components/Header";
 import Sidebar from "@components/Sidebar";
 import Table from "@components/Table";
+import { fetchAPI, postAPI, patchAPI, deleteAPI } from '@api/*';
 
 import { withSessionSsr } from "@lib/withSession";
+import { useState, useEffect } from "react";
+import Link from "next/link";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
-
 
 export const getServerSideProps = withSessionSsr(
   async function getServerSideProps({ req, res }) {
     let user = req.session.user;
+
     if (!user) {
       user = {
         role: "Guest",
@@ -24,9 +26,22 @@ export const getServerSideProps = withSessionSsr(
   }
 );
 
-export default function Transactions({ user }) {
+const Reports = ({
+  user
+}) => {
+    const [physicalCount, setPhysicalCount] = useState([]);
+
+  // Pages
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [searchQuery, setSearchQuery] = useState('');
+
   const router = useRouter();
-  
+
+  useEffect(() => {
+    getPhysicalCount();
+  }, []);
+
   useEffect(() => {
     console.log(user.role);
     if (user.role !== "Manager") {
@@ -34,75 +49,23 @@ export default function Transactions({ user }) {
     } 
   }, [user, router]);
 
-  const [originalInventory, setOriginalInventory] = useState([]);
-  const [inventory, setInventory] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(10);
-  const [searchQuery, setSearchQuery] = useState('');
-
-  useEffect(() => {
-    getInventory();
-  }, []);
-
-
-  useEffect(() => {
-    getInventory();
-  }, [inventory]);
-  
-
-  async function getInventory() {
+  async function getPhysicalCount() {
     try {
-      const response = await fetch('/api/order/getOrders', {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error('Request failed with status ' + response.status);
-      }
-
-      const data = await response.json();
-      
-      // sort by orderDate descending
-      data.sort((a, b) => {
-        return new Date(b.orderDate) - new Date(a.orderDate);
-      });
-
-      // 2023-07-10T13:43:50+00:00 Clean this format
-
-      data.forEach((order) => {
-        order.orderDate = new Date(order.orderDate).toLocaleString();
-      });
-    
-      setOriginalInventory(data);
-      setInventory(data);
+      const data = await fetchAPI("/api/order/getOrders");
+      setPhysicalCount(data);
     } catch (err) {
       console.error(err);
     }
   }
 
-  
-
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = inventory.slice(indexOfFirstItem, indexOfLastItem);
+  const currentItems = physicalCount.slice(indexOfFirstItem, indexOfLastItem);
 
   const paginate = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
 
-  
-
-  const tableProps = {
-    columns: [
-      { label: 'Order Id', key: 'orderId' },
-      { label: 'Total Price', key: 'totalPrice' },
-      { label: 'Order Date', key: 'orderDate' },
-      { label: 'User Id', key: 'userId' },
-    ],
-  };
 
   const handleSearch = (event) => {
     const query = event.target.value;
@@ -110,45 +73,63 @@ export default function Transactions({ user }) {
 
     if (query.trim() === '') {
       // If the search query is empty, revert back to the original inventory
-      setInventory(originalInventory);
+      // setIncreased(originalIncreased);
     }
   };
 
   return (
-    <>
-      <main>
-        <Sidebar role={user.role}/>
-        <div className="main-section">
-          <Header page={"Orders"} user={user} />
-          <div className="inventory">
-          <div className="inventory-functions">
-            <div>
-              <input
-                type="text"
-                placeholder="Search Name"
-                className="search"
-                value={searchQuery}
-                onChange={handleSearch}
-              />
-            </div>
-            <div>{/* Your button links */}</div>
-          </div>
-          <Table
-            data={currentItems}
-            columns={tableProps.columns}
-            currentPage={currentPage}
-            itemsPerPage={itemsPerPage}
-          />
+    <main>
+      <Sidebar role={user.role} />
+      <div className="main-section">
+        <Header page={"View Orders"} user={user} />
+        <div className="reports">
+          {/* <input
+            type="text"
+            placeholder="Search Employee Name"
+            className="search"
+            value={searchQuery}
+            onChange={handleSearch}
+          /> */}
+          {/* <h1 className="margin-bottom">View Count Summary Report</h1> */}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Order Date and Time</th>
+                        <th>Total Price </th>
+                        <th>Cashier</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {currentItems.map((i, index) => (
+                        <tr key={index}>
+                            <td>
+                                {i.orderDate.replace('T', ' ').slice(0, -6)}
+                            </td>
+                            <td className="row-right">
+                                P{i.totalPrice.toFixed(2)}
+                            </td>
+                            <td className="row-left">
+                                {i.users.lastname}
+                            </td>
+                            <td>
+                                <Link href={`/transactions/details/${i.orderId}`} className="viewmore">
+                                    View More
+                                </Link>
+                            </td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
           <Pagination
             itemsPerPage={itemsPerPage}
-            totalItems={inventory.length}
+            totalItems={physicalCount.length}
             currentPage={currentPage}
             paginate={paginate}
           />
         </div>
-        </div>
-      </main>
-    </>
+      </div>
+    </main>
   )
 }
 
@@ -175,3 +156,6 @@ const Pagination = ({ itemsPerPage, totalItems, currentPage, paginate }) => {
     </ul>
   );
 };
+
+
+export default Reports;

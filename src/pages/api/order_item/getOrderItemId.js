@@ -1,18 +1,19 @@
 import { withSessionRoute } from "@lib/withSession";
 import supabase from "@supabase";
 
-export default withSessionRoute(getPhysicalCount);
+export default withSessionRoute(getPhysicalCountList);
 
-async function getPhysicalCount(req, res) {
+async function getPhysicalCountList(req, res) {
     try {
+        const { orderId } = req.query;
+
         let { data: users, error } = await supabase
-            .from('physical_count')
+            .from('order_item')
             .select(`
-                sheet_number,
-                users(id, lastname),
-                updateDate
+                dish(dishName, price),
+                quantity
             `)
-            .order('sheet_number', { ascending: false });
+            .eq('orderId', orderId);
 
         if (error) {
             throw error;

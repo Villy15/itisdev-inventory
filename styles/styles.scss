@@ -116,6 +116,54 @@ table {
     }
 }
 
+.main-dashboard {
+    display: flex;
+    flex-direction: row;
+
+    .left-main {
+        width: 70%
+    }
+
+    .right-main {
+        width: 30%;
+    }
+}
+
+.dish-card {
+    border: 1px solid $darkblue;
+    padding: 10px;
+    margin: 10px;
+    border-radius: 5px;
+
+    button {
+        display: flex;
+        justify-content: flex-end;
+    }
+}
+  
+  .dish-card h3 {
+    margin: 0;
+    font-size: 18px;
+  }
+  
+  .dish-card p {
+    margin: 5px 0;
+    font-size: 14px;
+  }
+  
+  .dish-card.confirmed {
+    border-color: $lightblue;
+  }
+  
+  .checkmark {
+    color: green;
+    font-size: 20px;
+    // position: absolute;
+    top: 5px;
+    right: 5px;
+    align-self: flex-end;
+  }
+
 .pagination {
     display: flex;
     flex-direction: row;
@@ -510,7 +558,7 @@ table {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    width: 100%;
+    width: 50%;
     padding: 1rem; 
 
     h1  {

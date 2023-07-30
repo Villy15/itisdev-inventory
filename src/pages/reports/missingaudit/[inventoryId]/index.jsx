@@ -101,7 +101,7 @@ const Reports = ({
         <main>
             <Sidebar role={user.role} />
             <div className="main-section">
-                <Header page={"Detaled Descrepancy Report"} user={user} />
+                <Header page={"Detailed Discrepancy Report"} user={user} />
                 <div className="reports">
                     <div className="details">
                         <div className="row">

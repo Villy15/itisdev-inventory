@@ -10,6 +10,10 @@ const manager_sidebar_items = [
     href: '/'
   },
   {
+    name: 'View Low Stock',
+    href: '/dashboard/stock'
+  },
+  {
     name: 'Manager Users',
     href: '/users'
   },
@@ -18,7 +22,7 @@ const manager_sidebar_items = [
   //   href: '/reports',
   // },
   {
-    name: 'View Increase Report',
+    name: 'View Replenish Report',
     href: '/reports/increaseaudit'
   },
   {
@@ -42,10 +46,6 @@ const manager_sidebar_items = [
     href: '/transactions'
   },
   {
-    name: 'View Order Items',
-    href: '/order-items'
-  },
-  {
     name: 'View Menu',
     href: '/menu'
   },
@@ -53,10 +53,10 @@ const manager_sidebar_items = [
     name: 'View Variants',
     href: '/variants',
   },
-  {
-    name: 'Add Food/Drink',
-    href: '/menu/adddish'
-  },
+  // {
+  //   name: 'Add Food/Drink',
+  //   href: '/menu/adddish'
+  // },
   {
     name: 'Add New Variants',
     href: '/variants/addVariant',

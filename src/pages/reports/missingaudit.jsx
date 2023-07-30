@@ -179,9 +179,9 @@ const Reports = ({
     <main>
       <Sidebar role={user.role} />
       <div className="main-section">
-        <Header page={"View Descrepancy Report"} user={user} />
+        <Header page={"View Discrepancy Report"} user={user} />
         <div className="reports">
-          <h1 className="margin-bottom">Descrepancy Summary Report</h1>
+          <h1 className="margin-bottom">Discrepancy Summary Report</h1>
           {/* <input
             type="text"
             placeholder="Search ItemName"
