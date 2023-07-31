@@ -71,6 +71,26 @@ const Inventory = ({ user }) => {
     }
   }
 
+  useEffect(() => {
+    console.log(dishes);
+
+  }, [dishes]);
+
+
+  async function patchDish(dishId) {
+    try {
+      const data = await patchAPI(`/api/dish/patchDish`, { dishId });
+      console.log(data);
+      getConfirmDish();
+    } catch (err) {
+      console.error(err);
+    }
+  }
+  
+  useEffect(() => {
+    // patchDish(23);
+  }, []);
+
 
   return (
     <main>
@@ -80,7 +100,7 @@ const Inventory = ({ user }) => {
         <div className="main-dashboard">
           <div className="left-main">
             <div className="smaller-width">
-              <div className="dashboard-stock">
+              {/* <div className="dashboard-stock">
                 <div className="row">
                   <div className="card">
                     Total Sales past 30 Days
@@ -95,7 +115,7 @@ const Inventory = ({ user }) => {
                     </h1>
                   </div>
                 </div>
-              </div>
+              </div> */}
               <div className="inventory">
                 <h1>Recent Orders</h1>
                 <table>
@@ -131,8 +151,24 @@ const Inventory = ({ user }) => {
               </div>
             </div>
           </div>
-          <div className="right-main">
-           <SampleDishes />
+          <div className="right-main" style={{
+            paddingTop: "2rem",
+            paddingRight: "2rem",
+          }}>
+            <div className="sample-dishes">
+              <h1>Dishes to Confirm</h1>
+              <div className="dish-cards">
+                {dishes.map((dish) => (
+                  <DishCard
+                    key={dish.dishId}
+                    name={dish.dishName}
+                    price={dish.price}
+                    confirmed={dish.confirmed}
+                    onConfirm={() => patchDish(dish.dishId)}
+                  />
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -140,52 +176,12 @@ const Inventory = ({ user }) => {
   );
 };
 
-
-const SampleDishes = () => {
-  const dishes = [
-    {
-      id: 1,
-      name: "Spaghetti Carbonara",
-      price: 250.0,
-      confirmed: true,
-    },
-    {
-      id: 2,
-      name: "Chicken Adobo",
-      price: 180.0,
-      confirmed: true,
-    },
-    {
-      id: 3,
-      name: "Cheeseburger",
-      price: 150.0,
-      confirmed: true,
-    },
-  ];
-
-  return (
-    <div className="sample-dishes">
-      <h1>Dishes to Confirm</h1>
-      <div className="dish-cards">
-        {dishes.map((dish) => (
-          <DishCard
-            key={dish.id}
-            name={dish.name}
-            price={dish.price}
-            confirmed={dish.confirmed}
-          />
-        ))}
-      </div>
-    </div>
-  );
-};
-
-const DishCard = ({ name, price, confirmed }) => {
+const DishCard = ({ name, price, confirmed, onConfirm }) => {
   return (
     <div className={`dish-card ${confirmed ? "confirmed" : ""}`}>
       <h3>{name}</h3>
       <p>Price: P{price.toFixed(2)}</p>
-      <button>Confirm</button>
+      <button onClick={onConfirm}>Confirm</button>
     </div>
   );
 };

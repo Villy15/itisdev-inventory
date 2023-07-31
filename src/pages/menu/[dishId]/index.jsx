@@ -6,6 +6,7 @@ import Table from "@components/Table";
 import { withSessionSsr } from "@lib/withSession";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import { fetchAPI, patchAPI, deleteAPI, postAPI } from "@api/*";
 
 export const getServerSideProps = withSessionSsr(
   async function getServerSideProps({ req, res }) {
@@ -93,7 +94,36 @@ export default function Dish({ user }) {
       { label: 'Unit Measure', key: 'unit' },
     ],
   };
-  
+
+  async function enableDish(dish) {
+    try {
+      const data = await patchAPI("/api/dish/patchDishEnable", dish);
+      console.log(data);
+      // router.push('/users');
+
+      
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  const toggleDishEnable = async (dish) => {
+    try {
+      // Invert the 'enable' value and create a new object with the updated value and the 'id'
+      const updatedDish = {
+        dishId: dishId,
+        enable: !dish[0].enable,
+      };
+
+      // Call the 'enableDish' function with the updated object
+      await enableDish(updatedDish);
+      console.log(updatedDish);
+      console.log("HGIII");
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   return (
     <>
       <main>
@@ -114,6 +144,12 @@ export default function Dish({ user }) {
                     <div className="description-label">Description: </div>
                     <div className="description-text">{dish[0].description}</div>
                   </div>
+                  {/* If dish is enabled, display disabled button, if its disabled, display enable */}
+                  <button onClick={() => toggleDishEnable(dish)} style={{
+                    width: "100px",
+                  }}>
+                    {dish[0].enable ? "Disable" : "Enable"}
+                  </button>
                 </div>
               </div>
               )}

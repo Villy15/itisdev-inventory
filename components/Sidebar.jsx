@@ -39,7 +39,7 @@ const manager_sidebar_items = [
   },
   {
     name: 'View Inventory',
-    href: '/inventory', 
+    href: '/inventory/manager', 
   },
   {
     name: 'View Orders',

@@ -26,9 +26,7 @@ export const getServerSideProps = withSessionSsr(
   }
 );
 
-const Reports = ({
-  user
-}) => {
+const Reports = ({ user }) => {
   const [originalIncreased, setOriginalIncreased] = useState([]); 
   const [increased, setIncreased] = useState([]);
   const [filteredIncreased, setFilteredIncreased] = useState([]); 
@@ -56,7 +54,6 @@ const Reports = ({
   }, [user, router]);
 
   useEffect(() => {
-
     async function getIncreased() {
       try {
         const data = await fetchAPI("/api/reports/getMissing");
@@ -67,23 +64,16 @@ const Reports = ({
         const aggregatedData = {};
     
         for (const item of data) {
-          const { inventory, newDate, quantity, unit} = item;
+          const { inventory, newDate, quantity, unit } = item;
           const date = newDate.split("T")[0]; // Split and keep only the date part
           const key = `${inventory.ingredientName}_${date}`;
-          
           
           const inventoryId = inventory.inventoryId;
           const inventoryUnit = inventorylist.find((i) => i.inventoryId == inventoryId).unit;
         
           const convertedQuantity = convertUnits(unit, inventoryUnit, quantity);
 
-          // console.log("Unit: " + unit);
-          // console.log("Inventory Unit: " + inventoryUnit);
-          // console.log("Quantity: " + quantity);
-          // console.log("Converted Quantity: " + convertedQuantity);
-    
           if (!aggregatedData[key]) {
-
             aggregatedData[key] = {
               ingredientName: inventory.ingredientName,
               date: date,
@@ -106,7 +96,6 @@ const Reports = ({
     getIncreased();
 
     const convertUnits = (fromUnit, toUnit, quantity) => {
-      console.log(fromUnit, toUnit, quantity);
       const conversion = conversions.find(
         (conversion) => conversion.from_unit === fromUnit && conversion.to_unit === toUnit
       );
@@ -175,6 +164,58 @@ const Reports = ({
     }
   }
 
+  const applyDateFilter = () => {
+    // Filter by date range
+    const filteredData = originalIncreased.filter((item) => {
+      const date = item.newDate.slice(0, 10);
+      return date >= startDate && date <= endDate;
+    });
+
+    // Get total of each ingredient by date
+    const aggregatedData = {};
+
+    for (const item of filteredData) {
+      const { inventory, newDate, quantity, unit } = item;
+      const date = newDate.split("T")[0]; // Split and keep only the date part
+      const key = `${inventory.ingredientName}_${date}`;
+
+      const inventoryId = inventory.inventoryId;
+      const inventoryUnit = inventorylist.find((i) => i.inventoryId == inventoryId).unit;
+
+      const convertedQuantity = convertUnits(unit, inventoryUnit, quantity);
+
+      if (!aggregatedData[key]) {
+        aggregatedData[key] = {
+          ingredientName: inventory.ingredientName,
+          date: date,
+          quantity: convertedQuantity,
+          unit: inventoryUnit,
+          inventoryId: inventoryId,
+        };
+      } else {
+        aggregatedData[key].quantity += convertedQuantity;
+      }
+    }
+
+    const filteredAggregatedData = Object.values(aggregatedData);
+    setFilteredIncreased(filteredAggregatedData);
+  };
+
+  const [startDate, setStartDate] = useState(''); // State to store the start date for filtering
+  const [endDate, setEndDate] = useState('');
+
+  const handleDateFilterChange = (event) => {
+    // Get the input field name and value
+    const { name, value } = event.target;
+
+    // Update the corresponding state based on the input field name
+    if (name === 'startDate') {
+      setStartDate(value);
+    } else if (name === 'endDate') {
+      setEndDate(value);
+    }
+  };
+
   return (
     <main>
       <Sidebar role={user.role} />
@@ -182,13 +223,21 @@ const Reports = ({
         <Header page={"View Discrepancy Report"} user={user} />
         <div className="reports">
           <h1 className="margin-bottom">Discrepancy Summary Report</h1>
-          {/* <input
-            type="text"
-            placeholder="Search ItemName"
-            className="search"
-            value={searchQuery}
-            onChange={handleSearch}
-          /> */}
+          <div className="date-filter">
+            <input
+              type="date"
+              name="startDate"
+              value={startDate}
+              onChange={handleDateFilterChange}
+            />
+            <input
+              type="date"
+              name="endDate"
+              value={endDate}
+              onChange={handleDateFilterChange}
+            />
+            <button onClick={applyDateFilter}>Apply Filter</button>
+          </div>
           <table>
             <thead>
               <tr>
@@ -206,13 +255,9 @@ const Reports = ({
                     {i.ingredientName}
                   </td>
                   <td>
-                    {/* format date of  2023-07-28T14:06:58+00:00 to YYYY-MM-DD*/}
                     {i.date}
                   </td>
                   <td className="row-right">
-                    {/* {i.quantity.toFixed(2)}  */}
-                    {/* If the value is negative, make it + since this is a descrepancy report */}
-                    
                     {i.quantity < 0 ? `+${(i.quantity * -1).toFixed(2)}` : i.quantity.toFixed(2)}
                   </td>
                   <td className="row-left">
@@ -233,12 +278,12 @@ const Reports = ({
             currentPage={currentPage}
             paginate={paginate}
           />
+          <h1>END OF REPORT</h1>
         </div>
       </div>
     </main>
   )
 }
-
 
 const Pagination = ({ itemsPerPage, totalItems, currentPage, paginate }) => {
   const pageNumbers = [];
@@ -263,6 +308,5 @@ const Pagination = ({ itemsPerPage, totalItems, currentPage, paginate }) => {
     </ul>
   );
 };
-
 
 export default Reports;

@@ -85,7 +85,7 @@ const Reports = ({
     <main>
       <Sidebar role={user.role} />
       <div className="main-section">
-        <Header page={"Detaled Physical Report"} user={user} />
+        <Header page={"Detailed Physical Report"} user={user} />
         <div className="reports">
         <div className="details">
             <div className="row">

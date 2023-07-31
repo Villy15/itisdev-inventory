@@ -7,7 +7,9 @@ async function getDish(req, res) {
     try {
         let { data: ingredients, error } = await supabase
             .from('dish')
-            .select('*');
+            .select('*')
+            .filter('confirmed', 'eq', false);
+            
 
         if (error) {
             throw error;

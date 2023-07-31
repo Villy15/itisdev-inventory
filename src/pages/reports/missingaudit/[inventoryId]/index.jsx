@@ -106,6 +106,8 @@ const Reports = ({
                     <div className="details">
                         <div className="row">
                             <div className="report-header">Ingredient Name: <span>{increased.length > 0 ? increased[0].inventory.ingredientName : ''}</span></div>
+                            <div className="report-header">Date: <span>{ new Date().toLocaleString('en-US', { timeZone: 'Asia/Singapore' })}</span></div>
+
                         </div>
                         <div className="row">
                         </div>

@@ -19,6 +19,8 @@ const InputPhysicalForm = ({ user }) => {
     const [variant, setVariant] = useState([]);
     const [ingredientVariants, setIngredientVariants] = useState({});
     const [units, setUnits] = useState([]); // A
+    
+    const [isFormSubmitted, setIsFormSubmitted] = useState(false);
 
     const [conversions, setConversions] = useState([]);
 
@@ -55,6 +57,8 @@ const InputPhysicalForm = ({ user }) => {
         const filteredInventory = inventory.filter((item) => item.quantity != '');
         const maxSheetNumber = Math.max(...physicalCount.map((item) => item.sheet_number)) + 1;
         let missingId = Math.max(...missingInventory.map((item) => item.missingId)) + 1;
+
+        
 
         const newPhysicalCount = {
             sheet_number: maxSheetNumber,
@@ -126,9 +130,25 @@ const InputPhysicalForm = ({ user }) => {
 
             await postMissing(newMissingInventory);
 
+            
             missingId += 1;
+            setIsFormSubmitted(true);
         }
     }
+
+    useEffect(() => {
+        if (isFormSubmitted) {
+            // Reset variant and quantity for each inventory item
+            const resetInventory = inventory.map(item => ({
+                ...item,
+                variant: '',
+                quantity: '',
+            }));
+
+            setInventory(resetInventory);
+            setIsFormSubmitted(false); // Reset the isFormSubmitted state
+        }
+    }, [isFormSubmitted, inventory]);
     
 
     useEffect(() => {
@@ -255,7 +275,9 @@ const InputPhysicalForm = ({ user }) => {
     };
 
     return (
-        <div className='add-inventory-form'>
+        <div className='add-inventory-form' style={{
+            width: '100%',
+        }}>
             <div className="ingredients-table">
                 <table>
                     <thead>
@@ -338,7 +360,7 @@ const InputPhysicalForm = ({ user }) => {
                     onClick={
                         () => handleSubmit()
                     }
-                >Save</button>
+                >Submit</button>
             </div>
         </div>
     )

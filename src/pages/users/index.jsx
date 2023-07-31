@@ -125,9 +125,8 @@ export default function Users({ user }) {
                 </select>
               </div>
               <div>
-                *add encryption maybe becrypt?*  
-                <Link href="/users/addUser">
-                  <button>TODO: Delete User</button>
+                <Link href="/users/deleteUser">
+                  <button>Delete User</button>
                 </Link>
                 <Link href="/users/addUser">
                   <button>Add User</button>
