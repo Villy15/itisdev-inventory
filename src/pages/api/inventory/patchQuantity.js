@@ -6,10 +6,11 @@ export default withSessionRoute(patchInventory);
 async function patchInventory(req, res) {
     try {
         const updateQuantity = await req.body;
+        console.log(updateQuantity);
         
         const { data, error } = await supabase
             .from('inventory')
-            .update({ minquantity: updateQuantity.quantity })
+            .update({ minquantity: updateQuantity.minquantity })
             .eq('inventoryId', updateQuantity.inventoryId);
 
     

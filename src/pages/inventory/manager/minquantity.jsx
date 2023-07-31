@@ -136,18 +136,6 @@ const Inventory = ({ user }) => {
         }
     };
 
-    async function patchQuantity(newQuantity) {
-        try {
-            const data = await patchAPI("/api/inventory/patchQuantity", {
-                ingredientName: newQuantity.ingredientName,
-                quantity: newQuantity.quantity,
-            });
-            console.log(data);
-        } catch (err) {
-            console.error(err);
-        }
-
-    }
 
     const handleMinQuantityChange = (event, ingredientName) => {
         const { value } = event.target;
@@ -156,16 +144,54 @@ const Inventory = ({ user }) => {
           [ingredientName]: value,
         }));
       };
-
-      const handleSubmitMinQuantities = () => {
+      const handleSubmitMinQuantities = async () => {
+        // Create an array to hold all the promises for patchQuantity requests
+        const patchPromises = [];
+    
         // Update the minquantities in the backend for all items
-        for (const [ingredientName, minquantity] of Object.entries(updatedMinQuantities)) {
-          patchQuantity({
-            ingredientName,
-            minquantity,
-          });
+        for (const [inventoryId, minquantity] of Object.entries(updatedMinQuantities)) {
+          const newpatchQuantity = {
+            inventoryId: inventoryId,
+            minquantity: parseFloat(minquantity),
+          };
+    
+          // Collect all the promises in the array
+          patchPromises.push(patchQuantity(newpatchQuantity));
+        }
+    
+        try {
+          // Wait for all the promises to resolve
+          await Promise.all(patchPromises);
+          console.log("All minquantities updated successfully.");
+    
+          // Redirect to the desired page
+          router.push("/inventory/manager/");
+        } catch (error) {
+          console.error("Error updating minquantities:", error);
         }
       };
+
+    // Set default values for updatedMinQuantities when it's null
+    useEffect(() => {
+        if (lowStockInventory.length > 0) {
+            const defaultMinQuantities = lowStockInventory.reduce((acc, inventory) => {
+                acc[inventory.inventoryId] = inventory.minquantity;
+                return acc;
+            }, {});
+            setUpdatedMinQuantities(defaultMinQuantities);
+        }
+    }, [lowStockInventory]);
+
+    
+    async function patchQuantity(newQuantity) {
+        try {
+            const data = await patchAPI("/api/inventory/patchQuantity", newQuantity);
+            console.log(data);
+        } catch (err) {
+            console.error(err);
+        }
+
+    }
 
     return (
         <main>
@@ -207,7 +233,12 @@ const Inventory = ({ user }) => {
                                             {inventory.quantity}
                                         </td>
                                         <td className="row-right">
-                                            {inventory.minquantity}
+                                            {/* Display the minquantity input and bind its value to the updatedMinQuantities state */}
+                                            <input
+                                                type="number"
+                                                value={updatedMinQuantities[inventory.inventoryId] || ''}
+                                                onChange={(e) => handleMinQuantityChange(e, inventory.inventoryId)}
+                                            />
                                         </td>
                                     </tr>
                                 ))}
@@ -220,6 +251,9 @@ const Inventory = ({ user }) => {
                             paginate={paginate}
                         />
                         {/* Add legend info */}
+                        {/* Add the submit button to update minquantities */}
+                        <button onClick={handleSubmitMinQuantities}>Update MinQuantities</button>
+                        {/* ... */}
                     </div>
                 </div>
             </div>
