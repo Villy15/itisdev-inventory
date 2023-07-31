@@ -44,17 +44,31 @@ const ReplenishStockForm = ({user}) => {
                     ...prevFormValues,
                     name: selectedIngredient.ingredientName,
                 }));
+            } 
+
+            if (selectedIngredient && selectedIngredient.inventoryId) {
+                setSelectedInventoryId(selectedIngredient.inventoryId);
             }
         }
     }, [inventoryId, inventory]);
-
+    
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         const inventoryId = inventory.find((i) => i.ingredientName === value)?.inventoryId;
-        setSelectedInventoryId(inventoryId); // Update selected inventoryId
-        setFormValues({ ...formValues, [name]: value });
+        setSelectedInventoryId(inventoryId);
+    
+        // Reset the variant and units when selecting a new ingredient
+        if (name === "name") {
+            setFormValues({
+                name: value,
+                variant: '',
+                quantity: '',
+                units: '',
+            });
+        } else {
+            setFormValues({ ...formValues, [name]: value });
+        }
     };
-
     const handleSubmit = (e) => {
         e.preventDefault();
 
@@ -255,7 +269,7 @@ const ReplenishStockForm = ({user}) => {
                     >
                         {/* If variant.length is < 1 say no variant */}
                         <option value="" hidden>
-                            {variant.length < 1 ? 'No Variant' : 'Select Variant'}
+                            Select Variant
                         </option>
                         {variant.map((i) => (
                             <option key={i.variationId} value={i.variationName}>
@@ -263,7 +277,7 @@ const ReplenishStockForm = ({user}) => {
                             </option>
                         ))}
                     </select>
-                    <button type="button" onClick={() => router.push(`/variants/addVariant?ingredientId=${selectedInventoryId}`)}>
+                    <button type="button" onClick={() => router.push(`/variants/addVariant?ingredientId=${inventoryId}`)}>
                         Add New Variant
                     </button>
                 </div>
@@ -310,7 +324,7 @@ const ReplenishStockForm = ({user}) => {
                     onClick={
                         () => router.push('/inventory')
                     }> Cancel</button>
-                <button type="submit">Save</button>
+                <button type="submit">Submit</button>
                 {showConfirmation && (
                     <div className='confirmation-popup'>
                         <p>Updated {confirmationData?.name}</p>

@@ -76,7 +76,7 @@ export default function Menu({ user }) {
 
   async function getDish() {
     try {
-      const response = await fetch('/api/dish/getDish', {
+      const response = await fetch('/api/dish/getDishMenu', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

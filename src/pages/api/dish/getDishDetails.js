@@ -14,7 +14,8 @@ async function getDishDetails(req, res) {
                 dishPhoto,
                 category,
                 price,
-                description
+                description,
+                enable
             `)
             .eq('dishId', dishId);
 

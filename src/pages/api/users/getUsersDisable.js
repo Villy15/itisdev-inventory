@@ -1,21 +1,21 @@
 import { withSessionRoute } from "@lib/withSession";
 import supabase from "@supabase";
 
-export default withSessionRoute(getDish);
+export default withSessionRoute(getUsers);
 
-async function getDish(req, res) {
+async function getUsers(req, res) {
     try {
-        let { data: ingredients, error } = await supabase
-            .from('dish')
+        let { data: users, error } = await supabase
+            .from('users')
             .select('*')
             .eq('enable', true)
-            .eq('confirmed', true)
-            .order('dishName', true);
+            .order('firstname', true);
 
         if (error) {
             throw error;
         }
-        res.send(ingredients);
+
+        res.send(users);
     } catch (error) {
         res.statusCode = 500;
         res.send({ error: "Server error" });

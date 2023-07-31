@@ -240,7 +240,7 @@ const InputExpiredForm = ({user}) => {
                     onClick={
                         () => router.push('/inventory')
                     }> Cancel</button>
-                <button type="submit">Save</button>
+                <button type="submit">Submit</button>
                 {showConfirmation && (
                     <div className='confirmation-popup'>
                         <p>Updated {confirmationData?.name}</p>
