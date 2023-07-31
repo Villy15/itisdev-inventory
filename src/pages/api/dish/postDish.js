@@ -6,6 +6,7 @@ export default withSessionRoute(postDish);
 async function postDish(req, res) {
     try {
         const newDish = await req.body;
+        console.log(newDish);
 
         const { data, error } = await supabase
             .from("dish")

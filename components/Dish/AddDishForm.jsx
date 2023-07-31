@@ -169,7 +169,7 @@ const AddDishForm = () => {
 
     async function getDishes () {
         try {
-            const data = await fetchAPI("/api/dish/getDish");
+            const data = await fetchAPI("/api/dish/getDishAdd");
             setDishes(data);
         } catch (err) {
             console.error(err);

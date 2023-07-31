@@ -193,6 +193,24 @@ const Inventory = ({ user }) => {
 
     }
 
+    const [orderMin, setOrderMin] = useState([]);
+    async function getOrderMin() {
+        try {
+            const data = await fetchAPI("/api/order_item/getOrderMin");
+            setOrderMin(data);
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
+    useEffect(() => {
+        getOrderMin();
+    }, []);
+
+    useEffect(() => {
+        console.log(orderMin);
+    }, [orderMin]);
+
     return (
         <main>
             <Sidebar role={user.role} />
