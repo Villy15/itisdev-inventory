@@ -1,5 +1,6 @@
 import { withSessionRoute } from "../../../lib/withSession";
 import supabase from "../../../supabase";
+import bcrypt from "bcrypt";
 
 export default withSessionRoute(loginRoute);
 
@@ -24,7 +25,9 @@ async function loginRoute(req, res) {
     return;
   } 
 
-  if (user.password != password) {
+  const passwordMatch = await bcrypt.compare(password, user.password);
+
+  if (!passwordMatch) {
     res.statusCode = 401;
     res.send({ error: "Incorrect password" });
     return;

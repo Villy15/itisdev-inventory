@@ -135,7 +135,7 @@ const AddUserForm = () => {
                     <div className="form-group">
                         <label htmlFor="lastname">Input Last Name: <span>* </span></label>
                         <input
-                            type="password"
+                            type="text"
                             name="lastname"
                             id="lastname"
                             value={formValues.lastname}
@@ -176,7 +176,7 @@ const AddUserForm = () => {
                         value={formValues.position}
                         onChange={handleInputChange}
                     >
-                        <option value="" hidden>Select Ingredient</option>
+                        <option value="" hidden>Select Role</option>
                         <option value="Manager">Manager</option>
                         <option value="Stock Controller">Stock Controller</option>
                         <option value="Cashier">Cashier</option>                       

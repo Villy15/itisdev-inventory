@@ -10,14 +10,22 @@
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.24.0",
+    "bcrypt": "^5.1.0",
+    "bcryptjs": "^2.4.3",
     "eslint": "8.41.0",
     "eslint-config-next": "13.4.4",
     "iron-session": "^6.3.1",
     "next": "13.4.4",
+    "node-pre-gyp": "^0.17.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-drag-drop-files": "^2.3.10",
     "react-icons": "^4.9.0",
     "sass": "^1.62.1"
+  },
+  "browser": {
+    "fs": false,
+    "os": false,
+    "path": false
   }
 }
