@@ -145,11 +145,14 @@ export default function Dish({ user }) {
                     <div className="description-text">{dish[0].description}</div>
                   </div>
                   {/* If dish is enabled, display disabled button, if its disabled, display enable */}
-                  <button onClick={() => toggleDishEnable(dish)} style={{
-                    width: "100px",
-                  }}>
-                    {dish[0].enable ? "Disable" : "Enable"}
-                  </button>
+                  {/* Only display if user.role == "Manager" */}
+                  {user.role === "Manager" && (
+                    <button onClick={() => toggleDishEnable(dish)} style={{
+                      width: "100px",
+                    }}>
+                      {dish[0].enable ? "Disable" : "Enable"}
+                    </button>
+                  )}
                 </div>
               </div>
               )}
